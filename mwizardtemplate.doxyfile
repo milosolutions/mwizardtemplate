@@ -1,0 +1,58 @@
+## Milo Solutions - doxygen file TEMPLATE
+#
+#
+## (c) Milo Solutions, 2016
+
+DOXYFILE_ENCODING = UTF-8
+
+PROJECT_NAME = %{ProjectName}
+PROJECT_NUMBER = 1.0
+PROJECT_BRIEF = "TEMPLATE doxygen file - use it in your project"
+PROJECT_LOGO = %{ProjectName}.png
+
+OUTPUT_DIRECTORY = doc/
+
+INPUT = bumpVersion.sh license-Qt.txt main.cpp AUTHORS.md README.md \\
+	Release.md .gitignore version/
+#EXCLUDE_PATTERNS = */something/*
+USE_MDFILE_AS_MAINPAGE = README.md
+MARKDOWN_SUPPORT = YES
+TOC_INCLUDE_HEADINGS = 99
+
+RECURSIVE = TRUE
+QT_AUTOBRIEF = YES
+
+EXTRACT_ALL = YES
+EXTRACT_PRIVATE = YES
+EXTRACT_STATIC = YES
+
+DISTRIBUTE_GROUP_DOC = YES
+
+GENERATE_TAGFILE = %{ProjectName}.doxytag
+GENERATE_HTML = YES
+GENERATE_LATEX = NO
+GENERATE_RTF = NO
+GENERATE_MAN = NO
+GENERATE_XML = NO
+
+HTML_OUTPUT = html/
+HTML_FILE_EXTENSION = .html
+HTML_HEADER = doc/branding/milo-doxy-header.html
+HTML_FOOTER = doc/branding/milo-doxy-footer.html
+HTML_EXTRA_STYLESHEET= doc/branding/milo-doxygen.css
+HTML_EXTRA_FILES = doc/branding/milo.js
+IMAGE_PATH = doc/img
+
+TAB_SIZE = 4
+INHERIT_DOCS = YES
+BUILTIN_STL_SUPPORT = YES
+GENERATE_TODOLIST = YES
+
+ALLEXTERNALS = YES
+EXTERNAL_GROUPS = YES
+EXTERNAL_PAGES = YES
+
+HAVE_DOT = NO
+
+TAGFILES = ../../../milocodedatabase.doxytag=../../../../../doc/html
+
