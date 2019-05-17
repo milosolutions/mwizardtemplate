@@ -1,6 +1,5 @@
-[TOC]
-
-Milo Code DB main ([online](https://docs.milosolutions.com/milo-code-db/main/) | [offline](\ref milodatabasemain))
+Milo base project template
+===
 
 [Source code](https://github.com/milosolutions/newprojecttemplate)
 
