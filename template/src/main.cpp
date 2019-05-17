@@ -38,13 +38,14 @@ Q_LOGGING_CATEGORY(coreMain, "core.main")
   class, if present.
   */
 int main(int argc, char *argv[]) {
-    //MiloLog::instance();
+    //MLog::instance();
     // Set up basic application data. Modify this to your needs
     QCoreApplication app(argc, argv);
     app.setApplicationVersion(AppVersion);
     app.setOrganizationName("Milo Solutions");
     app.setOrganizationDomain("milosolutions.com");
     app.setApplicationName("%{ProjectName}");
+    //logger()->setLogLevel(MLog::DebugLog);
     //logger()->enableLogToFile(app.applicationName());
     qCInfo(coreMain) << "\\nName:" << app.applicationName()
                  << "\\nOrganisation:" << app.organizationName()
