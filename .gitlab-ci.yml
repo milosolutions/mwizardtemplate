@@ -1,0 +1,115 @@
+stages:
+- test
+- build
+- upload
+- cleanup
+
+#Global variables
+variables:
+    QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.7/android_armv7"
+    ANDROID_SDK_ROOT: "/home/tools/android/android-sdk-linux"
+    ANDROID_NDK_ROOT: "/home/tools/android/android-ndk"
+    ANDROID_NDK_TOOLCHAIN_VERSION: "4.9"
+    ANDROID_TARGET_PLATFORM: "android-23"
+    JAVA_HOME: "/home/tools/jdk8"
+
+.common: &common
+  allow_failure: false
+  before_script:
+    - export OUT_PACKAGES_DIR="$HOME/packages/$CI_BUILD_REF"
+    - mkdir -p $OUT_PACKAGES_DIR
+    - git submodule sync --recursive
+    - git submodule update --init --recursive
+    - git submodule status --recursive
+
+unit_tests:
+  <<: *common
+  tags:
+    - LinuxServer
+  stage: test
+  variables:
+    QT_PATH: "/home/tools/Qt-OpenSource/5.9/gcc_64"
+  script:
+    - cd $CI_PROJECT_DIR
+    - $QT_PATH/bin/qmake
+    - make -j 3
+    - make -j 3 check TESTARGS="-platform offscreen"
+
+# Android
+android_build:
+  <<: *common
+  tags:
+    - LinuxAndroid
+  stage: build
+  variables:
+    PACKAGE_NAME: "name_$CI_COMMIT_REF_NAME.apk"
+  script:
+    - cd $CI_PROJECT_DIR
+    - $QT_PATH_ANDROID/bin/qmake
+    - make -j3
+    - make install INSTALL_ROOT=$CI_PROJECT_DIR/android-build
+    - cd $CI_PROJECT_DIR
+    - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$CI_PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle
+    - cp -f android-build/build/outputs/apk/android-build-release.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+
+# Linux
+linux_build:
+  <<: *common
+  tags:
+    - LinuxServer
+  stage: build
+  variables:
+    QT_PATH: "/home/tools/Qt/5.8/gcc_64/"
+  script:
+    - cd $CI_PROJECT_DIR
+    - $QT_PATH/bin/qmake
+    - make -j3
+    - make install INSTALL_ROOT=$CI_PROJECT_DIR/build
+
+# Windows
+windows_build:
+  <<: *common
+  tags:
+    - WindowsDesktop
+  stage: build
+  variables:
+    QT_PATH: C:\Tools\Qt-OpenSource\5.9.1\mingw53_32
+    MAKE_PATH: C:\Tools\Qt-OpenSource\Tools\mingw530_32\bin\mingw32_make
+  script:
+    - cd $CI_PROJECT_DIR
+    - $QT_PATH\bin\qmake
+    - $MAKE_PATH
+    - $MAKE_PATH install
+    
+#macos_build:
+#  TODO
+
+upload_job:
+  <<: *common
+  tags:
+    - LinuxServer
+  stage: upload
+  when: on_success
+  variables:
+    UPLOAD_SCRIPT: "$CI_PROJECT_DIR/milo/mscripts/seafile/upload_to_seafile.sh"
+  script:
+    - export BUILD_TIMESTAMP=`date +%Y-%m-%d`
+    - cd $OUT_PACKAGES_DIR
+    - ls -lh
+    - APK_PACKAGES=*.apk
+    - for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"_"$PACKAGE"; done
+    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -t $SEAFILE_API_TOKEN; done
+    - $CI_PROJECT_DIR/milo/mscripts/mattermost-notification.sh
+
+cleanup:
+  <<: *common
+  tags:
+    - LinuxServer
+    - LinuxAndroid
+    - WindowsDesktop
+    - macOS
+  stage: cleanup
+  when: always
+  script:
+    - ls -lh $OUT_PACKAGES_DIR
+    - rm -rf $OUT_PACKAGES_DIR

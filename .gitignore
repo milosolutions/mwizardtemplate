@@ -27,5 +27,17 @@ Thumbs.db
 *.kate-swp
 *.doxytag
 doc/html/
+
+.git.*
+.gitignore.*
+.gitlab-ci.yml.*
+*.doxytag.*
+
+# Temp Python files (git hooks, see milo/mscripts/hooks)
 __pycache__/
 mconfig.py
+
+# OpenSSL build files (see milo/mcrypto/scripts)
+milo/mcrypto/scripts/OpenSSL/
+milo/mcrypto/scripts/src/
+milo/mcrypto/scripts/setenv-android.sh
