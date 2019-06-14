@@ -15,6 +15,16 @@ QMAKE_CXXFLAGS += -Werror
 
 TEMPLATE = app
 CONFIG += c++14
+
+no-ltcg {
+    message("Compiling with link time optimizations (LTCG) DISABLED)")
+    CONFIG -= ltcg
+}
+
+ltcg {
+    message("Compiling with link time optimizations (LTCG) ENABLED)")
+}
+
 TARGET = %{ProjectName}
 
 HEADERS +=

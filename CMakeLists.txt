@@ -3,28 +3,68 @@ if (POLICY CMP0043)
   cmake_policy(SET CMP0043 NEW)
 endif()
 
-include(version.cmake)
-
 project(%{ProjectName}
   VERSION ${VERSION}
   DESCRIPTION "Milo code DB template file"
   LANGUAGES CXX
 )
 
-# Use C++ 14 standard
-set(CMAKE_CXX_STANDARD 14)
+include(version.cmake)
+include(qtbase.cmake)
+
+# MCDB modules
+add_subdirectory(milo/mlog)
+add_subdirectory(milo/mconfig)
+
+# Unit tests
+#add_subdirectory(tests)
+
+set(SOURCES
+  %{ProjectName}/src/main.cpp
+)
+
+set(RESOURCES
+  %{ProjectName}/qml/qml.qrc
+  %{ProjectName}/resources/resources.qrc
+)
+
+set(OTHER_FILES
+  README.md
+  Release.md
+  AUTHORS.md
+  LICENSE-MiloCodeDB.txt
+  license-Qt.txt
+  %{ProjectName}.doxyfile
+  .clang-format
+  .gitignore
+  .gitlab-ci.yml
+)
+
+add_executable(%{ProjectName} ${SOURCES} ${OTHER_FILES}
+  $<TARGET_OBJECTS:mlog>
+  $<TARGET_OBJECTS:mconfig>
+)
+
+target_include_directories(%{ProjectName} PUBLIC
+  $<TARGET_PROPERTY:mlog,INCLUDE_DIRECTORIES>
+  $<TARGET_PROPERTY:mconfig,INCLUDE_DIRECTORIES>
+)
+
 # Mark all warnings as errors
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -fPIC")
+target_compile_options(%{ProjectName} PRIVATE -Werror -fPIC)
 
-find_package(Qt5Core REQUIRED)
+# Defines
+target_compile_definitions(%{ProjectName} PRIVATE QT_USE_QSTRINGBUILDER)
 
-# Find includes in corresponding build directories
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# Instruct CMake to run moc automatically when needed
-set(CMAKE_AUTOMOC ON)
-# Create code from a list of Qt designer ui files
-set(CMAKE_AUTOUIC ON)
-# Create code for Qt Resource Files
-set(CMAKE_AUTORCC ON)
+# Enable LTCG (link time optimization)
+option (ltcg "Enable LTCG (link time optimization)" OFF)
+if (ltcg)
+  set_property(TARGET %{ProjectName} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+endif (ltcg)
 
-add_subdirectory(%{ProjectName})
+# Use C++ 14 standard
+target_compile_features(%{ProjectName} PRIVATE cxx_std_14)
+
+target_link_libraries(%{ProjectName}
+  Qt5::Core
+)
