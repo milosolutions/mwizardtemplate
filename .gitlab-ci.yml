@@ -6,7 +6,7 @@ stages:
 
 #Global variables
 variables:
-    QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.7/android_armv7"
+    QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.12/android_armv7"
     ANDROID_SDK_ROOT: "/home/tools/android/android-sdk-linux"
     ANDROID_NDK_ROOT: "/home/tools/android/android-ndk"
     ANDROID_NDK_TOOLCHAIN_VERSION: "4.9"
@@ -17,6 +17,7 @@ variables:
   allow_failure: false
   before_script:
     - export OUT_PACKAGES_DIR="$HOME/packages/$CI_BUILD_REF"
+    - export CORES=`nproc`
     - mkdir -p $OUT_PACKAGES_DIR
     - git submodule sync --recursive
     - git submodule update --init --recursive
@@ -28,12 +29,12 @@ unit_tests:
     - LinuxServer
   stage: test
   variables:
-    QT_PATH: "/home/tools/Qt-OpenSource/5.9/gcc_64"
+    QT_PATH: "/home/tools/Qt-OpenSource/5.12/gcc_64"
   script:
-    - cd $CI_PROJECT_DIR
+    - cd $CI_PROJECT_DIR/tests
     - $QT_PATH/bin/qmake
-    - make -j 3
-    - make -j 3 check TESTARGS="-platform offscreen"
+    - make -j $CORES
+    - make check TESTARGS="-platform offscreen"
 
 # Android
 android_build:
@@ -46,7 +47,7 @@ android_build:
   script:
     - cd $CI_PROJECT_DIR
     - $QT_PATH_ANDROID/bin/qmake
-    - make -j3
+    - make -j $CORES
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/android-build
     - cd $CI_PROJECT_DIR
     - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$CI_PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle
@@ -59,11 +60,11 @@ linux_build:
     - LinuxServer
   stage: build
   variables:
-    QT_PATH: "/home/tools/Qt/5.8/gcc_64/"
+    QT_PATH: "/home/tools/Qt/5.12/gcc_64/"
   script:
     - cd $CI_PROJECT_DIR
     - $QT_PATH/bin/qmake
-    - make -j3
+    - make -j $CORES
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/build
 
 # Windows
@@ -73,7 +74,7 @@ windows_build:
     - WindowsDesktop
   stage: build
   variables:
-    QT_PATH: C:\Tools\Qt-OpenSource\5.9.1\mingw53_32
+    QT_PATH: C:\Tools\Qt-OpenSource\5.12\mingw53_32
     MAKE_PATH: C:\Tools\Qt-OpenSource\Tools\mingw530_32\bin\mingw32_make
   script:
     - cd $CI_PROJECT_DIR

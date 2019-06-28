@@ -3,13 +3,15 @@ if (POLICY CMP0043)
   cmake_policy(SET CMP0043 NEW)
 endif()
 
+include(version.cmake)
+
 project(%{ProjectName}
   VERSION ${VERSION}
   DESCRIPTION "Milo code DB template file"
   LANGUAGES CXX
 )
 
-include(version.cmake)
+# This has to be below project() because it calls find_* function
 include(qtbase.cmake)
 
 # MCDB modules
@@ -20,12 +22,12 @@ add_subdirectory(milo/mconfig)
 #add_subdirectory(tests)
 
 set(SOURCES
-  %{ProjectName}/src/main.cpp
+  src/main.cpp
 )
 
 set(RESOURCES
-  %{ProjectName}/qml/qml.qrc
-  %{ProjectName}/resources/resources.qrc
+  qml/qml.qrc
+  resources/resources.qrc
 )
 
 set(OTHER_FILES
@@ -34,7 +36,7 @@ set(OTHER_FILES
   AUTHORS.md
   LICENSE-MiloCodeDB.txt
   license-Qt.txt
-  %{ProjectName}.doxyfile
+  %{ProjectName}.doxyfile.in
   .clang-format
   .gitignore
   .gitlab-ci.yml
@@ -60,6 +62,7 @@ target_compile_definitions(%{ProjectName} PRIVATE QT_USE_QSTRINGBUILDER)
 option (ltcg "Enable LTCG (link time optimization)" OFF)
 if (ltcg)
   set_property(TARGET %{ProjectName} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+  message("Building with LTCG enabled")
 endif (ltcg)
 
 # Use C++ 14 standard

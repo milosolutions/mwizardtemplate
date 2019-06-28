@@ -1,5 +1,4 @@
-Milo base project template
-===
+# Milo base project template
 
 [Source code](https://github.com/milosolutions/newprojecttemplate)
 
@@ -22,15 +21,14 @@ After installation, you will notice that MCDB neatly organises your files.
 * milo - this folder contains all Milo Code DB submodules. Each module contains
 a .pri file. Include it in your .pro, and the submodule will become active. The
 MCDB installer does this automatically for you
-* _project name_ - this is where your source code should go. It contains platform
-includes, application's main.pro file, main.cpp and stubs for QML and resources
-(if not needed, remove them)
 * tests - put all unit tests here. They will be picked up by Qt Creator
 automatically when you open your main .pro file
 (located in _project name_/_project name_.pro)
-* _project name_.doxyfile - doxygen configuration file. Use it to set up and
-build the documentation for your project. Milo submodules each have a doxyfile
-as well, so you can easily include them (via doxytags)
+* _project name_.doxyfile.in - doxygen configuration template file. Use it to
+set up and build the documentation for your project. Milo submodules each have a
+doxyfile as well, so you can easily include them (via doxytags).
+The .in file is transformed into a real soxygen configuration file when you run
+`qmake CONFIG+=docs` - it will fill in the proper version string
 * AUTHORS.md - specify who writes your project. Useful in FOSS projects when
 you need to change license or compile a list of credits. You can remove this
 file if you don't need it
@@ -46,9 +44,8 @@ apply to your code
 * license-Qt.txt - LGPL license under which Qt is distributed. This is only
 included so that you don't forget about your LGPL obligations when creating a Qt
 project
-* _project name_.pro - main .pro file. It is a subdirs project, which defines
-unit test targets and your concrete project. For main .pro of your application,
-see _project name_/_project name_.pro instead
+* _project name_.pro - main .pro file
+* CMakeLists.txt - main cmake file
 
 ## Setup
 
