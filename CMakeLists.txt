@@ -19,7 +19,7 @@ add_subdirectory(milo/mlog)
 add_subdirectory(milo/mconfig)
 
 # Unit tests
-#add_subdirectory(tests)
+add_subdirectory(tests)
 
 set(SOURCES
   src/main.cpp
