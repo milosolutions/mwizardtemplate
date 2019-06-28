@@ -15,6 +15,7 @@ project(%{ProjectName}
 include(qtbase.cmake)
 
 # MCDB modules
+# TODO: parametrize (auto-insert based on modules chosen in wizard)
 add_subdirectory(milo/mlog)
 add_subdirectory(milo/mconfig)
 
@@ -42,11 +43,13 @@ set(OTHER_FILES
   .gitlab-ci.yml
 )
 
+# TODO: parametrize (auto-insert based on modules chosen in wizard)
 add_executable(%{ProjectName} ${SOURCES} ${OTHER_FILES}
   $<TARGET_OBJECTS:mlog>
   $<TARGET_OBJECTS:mconfig>
 )
 
+# TODO: parametrize (auto-insert based on modules chosen in wizard)
 target_include_directories(%{ProjectName} PUBLIC
   $<TARGET_PROPERTY:mlog,INCLUDE_DIRECTORIES>
   $<TARGET_PROPERTY:mconfig,INCLUDE_DIRECTORIES>
