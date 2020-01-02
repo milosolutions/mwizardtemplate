@@ -56,7 +56,9 @@ target_include_directories(%{ProjectName} PUBLIC
 )
 
 # Mark all warnings as errors
-target_compile_options(%{ProjectName} PRIVATE -Werror -fPIC)
+if (NOT WIN32)
+  target_compile_options(%{ProjectName} PRIVATE -Werror -fPIC)
+endif(WIN32)
 
 # Defines
 target_compile_definitions(%{ProjectName} PRIVATE QT_USE_QSTRINGBUILDER)

@@ -11,7 +11,9 @@ include(version.pri)
 # https://www.kdab.com/uncovering-32-qt-best-practices-compile-time-clazy/
 # !!!
 DEFINES *= QT_USE_QSTRINGBUILDER
-QMAKE_CXXFLAGS += -Werror
+!win32 {
+    QMAKE_CXXFLAGS += -Werror
+}
 
 TEMPLATE = app
 CONFIG += c++14

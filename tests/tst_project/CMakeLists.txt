@@ -13,7 +13,9 @@ add_executable(tst_project tst_testcmake.cpp)
 #)
 
 ## Mark all warnings as errors
-target_compile_options(tst_project PRIVATE -Werror -fPIC)
+if (NOT WIN32)
+  target_compile_options(tst_project PRIVATE -Werror -fPIC)
+endif(WIN32)
 
 ## Enable LTCG (link time optimization)
 #option (ltcg "Enable LTCG (link time optimization)" OFF)
