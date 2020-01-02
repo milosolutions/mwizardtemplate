@@ -24,7 +24,7 @@ SOFTWARE.
 #include <QtTest>
 #include <QCoreApplication>
 
-class Test%{ProjectName} : public QObject
+class Test%{JS: '%{ProjectName}'.replace(/[^A-Z0-9]+/ig, "_")} : public QObject
 {
    Q_OBJECT
 
@@ -34,16 +34,16 @@ private slots:
 
 };
 
-void Test%{ProjectName}::initTestCase()
+void Test%{JS: '%{ProjectName}'.replace(/[^A-Z0-9]+/ig, "_")}::initTestCase()
 {
-    QCoreApplication::setApplicationName("%{ProjectName} Unit Test");
+    QCoreApplication::setApplicationName("%{JS: '%{ProjectName}'.replace(/[^A-Z0-9]+/ig, "_")} Unit Test");
     QCoreApplication::setOrganizationName("");
 }
 
-void Test%{ProjectName}::cleanupTestCase()
+void Test%{JS: '%{ProjectName}'.replace(/[^A-Z0-9]+/ig, "_")}::cleanupTestCase()
 {
 }
 
-QTEST_MAIN(Test%{ProjectName})
+QTEST_MAIN(Test%{JS: '%{ProjectName}'.replace(/[^A-Z0-9]+/ig, "_")})
 
 #include "tst_%{ProjectName}.moc"
