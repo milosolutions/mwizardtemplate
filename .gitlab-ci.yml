@@ -82,8 +82,27 @@ windows_build:
     - $MAKE_PATH
     - $MAKE_PATH install
     
+## Placeholder for MacOs build, feel free to improve it
+## 
 #macos_build:
-#  TODO
+#<<: *common
+#tags:
+#  - MacDesktop
+#stage: build
+#variables:
+#  QT_PATH: "/home/tools/Qt/5.12/gcc_64/"
+#script:
+#   - cd $CI_PROJECT_DIR
+#   - $QT_PATH/bin/qmake
+#   - make -j $CORES
+#   - make install INSTALL_ROOT=$CI_PROJECT_DIR/build
+## use this script to notarize your app, more info here:
+## https://support.apple.com/en-us/HT204397
+## Apple ID username - your Apple id
+## Apple ID password - generated app specific password for your id
+## bundle ID - like com.milosolutions.yourapp
+## file - output build file 
+#   - pyhton3 ./mac/notarize-macos.py <Apple ID username> <Apple ID password> <bundle ID> <file>
 
 upload_job:
   <<: *common
