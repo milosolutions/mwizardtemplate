@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Yuma Bench
+GenericName=Yuma Bench
+Name[pl]=YumaBench
+Comment=Yuma GUI application
+Comment[pl]=GUI dla aplikacji Yuma
+Exec="$$EXECUTABLE_LOC"
+Icon=yuma-bench
+Terminal=false
+Type=Application
+Categories=System;

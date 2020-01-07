@@ -72,6 +72,9 @@ include(platforms/mac/mac.pri)
 @if "%{AndroidChB}" == "AndroidChBChecked"
 include(platforms/android/android.pri)
 @endif
+@if "%{LinuxChB}" == "LinuxChBChecked"
+include(platforms/linux/linux.pri)
+@endif
 
 ## Modules
 @if "%{mbarcodescannerCheckBox}" == "mbarcodescannerChBChecked"
@@ -97,4 +100,13 @@ include(milo/mscripts/mscripts.pri)
 @endif
 @if "%{msentryCheckBox}" == "msentryChBChecked"
 include(milo/msentry/msentry.pri)
+@endif
+@if "%{msshtunnelCheckBox}" == "msshtunnelChBChecked"
+include(milo/msshtunnel/msshtunnel.pri)
+@endif
+@if "%{memailsystemCheckBox}" == "memailsystemChBChecked"
+include(milo/memailsystem/memailsystem.pri)
+@endif
+@if "%{mcalendarCheckBox}" == "mcalendarChBChecked"
+include(milo/mcalendar/mcalendar.pri)
 @endif

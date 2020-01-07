@@ -1,0 +1,8 @@
+Package: "$$DAPPNAME"
+Version: "$$DAPPVERSION"
+Section: "$$DSECTION"
+Priority: "$$DPRIORITY"
+Architecture: amd64
+Depends: "$$DDEPENDS"
+Maintainer: "$$DMAINTANER"
+Description: "$$DESCRIPTION"

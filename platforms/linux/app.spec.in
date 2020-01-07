@@ -1,0 +1,41 @@
+# issue with deletion of BUILDROOT on centOS on rpmbuild
+%define __spec_install_pre /bin/true
+
+Summary:        "$$RSUMMARY"
+Name:           "$$RAPPNAME"
+Version:        "$$RAPPVERSION"
+Release:        "$$RRELEASE"
+License:        "$$RLICENSE"
+BuildArch:      "$$RBUILDARCH"
+Group:          "$$RGROUP"
+Vendor:         "$$RVENDOR"
+Requires:       "$$RREQUIRES"
+
+%description
+"$$RDESCRIPTION"
+
+#%prep
+#%setup -n %{name}
+
+#%build
+
+#%install
+#mkdir -p $RPM_BUILD_ROOT/usr/local/bin
+
+#%clean
+#rm -rf $RPM_BUILD_ROOT
+#rm -rf %{_tmppath}/%{name}
+#rm -rf %{_topdir}/BUILD/%{name}
+
+%files
+%defattr(-,root,root)
+/usr/local/bin/%{ProjectName}
+/usr/share/applications/%{ProjectName}.desktop
+#/usr/share/pixmaps/%{ProjectName}.png
+
+#%post
+#echo "in post section"
+
+
+%changelog
+"$$RCHANGELOG"
