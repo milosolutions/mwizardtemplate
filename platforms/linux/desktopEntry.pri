@@ -37,6 +37,6 @@ isEmpty( ROOT_B_DIR) {
 
 EXECUTABLE_LOC="$$TARGET"
 
-desktopShortcut.input = ./platforms/linux/%{ProjectName}.desktop.in
+desktopShortcut.input = ./platforms/linux/app.desktop.in
 desktopShortcut.output = $$ROOT_B_DIR/usr/share/applications/%{ProjectName}.desktop
 QMAKE_SUBSTITUTES += desktopShortcut

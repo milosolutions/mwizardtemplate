@@ -1,11 +1,15 @@
 [Desktop Entry]
-Name=Yuma Bench
-GenericName=Yuma Bench
-Name[pl]=YumaBench
-Comment=Yuma GUI application
-Comment[pl]=GUI dla aplikacji Yuma
+
+# Destop entry format:
+# https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html
+
+Name=%{ProjectName}
+GenericName=%{ProjectName}
+Name[pl]=%{ProjectName}
+Comment=%{ProjectName} GUI application
+Comment[pl]=GUI dla aplikacji %{ProjectName}
 Exec="$$EXECUTABLE_LOC"
-Icon=yuma-bench
+#Icon=%{ProjectName}
 Terminal=false
 Type=Application
 Categories=System;
