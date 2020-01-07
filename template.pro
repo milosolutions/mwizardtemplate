@@ -93,7 +93,7 @@ include(milo/mlog/mlog.pri)
 include(milo/mrestapi/mrestapi.pri)
 @endif
 @if "%{mscriptsCheckBox}" == "mscriptsChBChecked"
-include(../milo/mscripts/mscripts.pri)
+include(milo/mscripts/mscripts.pri)
 @endif
 @if "%{msentryCheckBox}" == "msentryChBChecked"
 include(milo/msentry/msentry.pri)
