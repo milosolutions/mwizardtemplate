@@ -19,6 +19,9 @@ SUBDIRS += \\
 @if "%{mconfigCheckBox}" == "mconfigChBChecked"
 	../milo/mconfig/tst_mconfig \\
 @endif
+@if "%{mmigrationsCheckBox}" == "mmigrationsChBChecked"
+	../milo/mmigrations/tst_mmigrations \\
+@endif
     tst_project
 
 
