@@ -7,6 +7,10 @@
 
 ## prebuild step, prepare initial file structure, make substitute for control
 
+# this flags helps to install rpms with applications compiled with c++14 standard
+# feel free to comment it if it cause any problems
+QMAKE_CXXFLAGS += "-fno-sized-deallocation"
+
 OTHER_FILES += \\
     platforms/linux/app.spec.in
 
