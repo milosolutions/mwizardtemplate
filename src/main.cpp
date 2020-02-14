@@ -23,11 +23,15 @@ SOFTWARE.
 
 
 /*
-  TEMPLATE main.cpp by Milo Solutions. Copyright 2016
+  TEMPLATE main.cpp by Milo Solutions. Copyright 2020
 */
 
 #include <QCoreApplication>
 #include <QLoggingCategory>
+
+//#include "mlog/mlog.h"
+//#include "utils/tags.h"
+//#include "utils/helpers.h"
 
 // Prepare logging categories. Modify these to your needs
 //Q_DECLARE_LOGGING_CATEGORY(core) // already declared in MLog header
@@ -48,11 +52,11 @@ int main(int argc, char *argv[]) {
     //logger()->setLogLevel(MLog::DebugLog);
     //logger()->enableLogToFile(app.applicationName());
     qCInfo(coreMain) << "\\nName:" << app.applicationName()
-                 << "\\nOrganisation:" << app.organizationName()
-                 << "\\nDomain:" << app.organizationDomain()
-                 << "\\nVersion:" << app.applicationVersion()
-                 << "\\nSHA:" << GitCommit
-                 << "\\nBuild date:" << BuildDate;
+                     << "\\nOrganisation:" << app.organizationName()
+                     << "\\nDomain:" << app.organizationDomain()
+                     << "\\nVersion:" << app.applicationVersion()
+                     << "\\nSHA:" << GitCommit
+                     << "\\nBuild date:" << BuildDate;
 
     return app.exec();
 }

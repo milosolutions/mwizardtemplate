@@ -24,6 +24,8 @@ add_subdirectory(tests)
 
 set(SOURCES
   src/main.cpp
+  src/utils/tags.h
+  src/utils/helpers.h
 )
 
 set(RESOURCES

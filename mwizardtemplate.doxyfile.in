@@ -1,7 +1,7 @@
 ## Milo Solutions - doxygen file TEMPLATE
 #
 #
-## (c) Milo Solutions, 2016
+## (c) Milo Solutions, 2020
 
 DOXYFILE_ENCODING = UTF-8
 
@@ -12,8 +12,10 @@ PROJECT_LOGO = %{ProjectName}.png
 
 OUTPUT_DIRECTORY = doc/
 
-INPUT = bumpVersion.sh license-Qt.txt main.cpp AUTHORS.md README.md \\
-	Release.md .gitignore version/
+INPUT = license-Qt.txt AUTHORS.md README.md Release.md \\
+    platforms/ \\
+    src/
+
 #EXCLUDE_PATTERNS = */something/*
 USE_MDFILE_AS_MAINPAGE = README.md
 MARKDOWN_SUPPORT = YES
@@ -22,9 +24,20 @@ TOC_INCLUDE_HEADINGS = 99
 RECURSIVE = TRUE
 QT_AUTOBRIEF = YES
 
-EXTRACT_ALL = YES
-EXTRACT_PRIVATE = YES
+#EXTRACT_ALL = YES
+EXTRACT_PRIVATE = NO
+EXTRACT_PRIV_VIRTUAL = YES
+EXTRACT_PACKAGE = YES
 EXTRACT_STATIC = YES
+EXTRACT_LOCAL_CLASSES = YES
+
+WARNINGS = YES
+WARN_AS_ERROR = NO
+WARN_IF_UNDOCUMENTED = YES
+WARN_IF_DOC_ERROR = YES
+WARN_NO_PARAMDOC = NO
+
+SOURCE_BROWSER = YES
 
 DISTRIBUTE_GROUP_DOC = YES
 
@@ -41,7 +54,21 @@ HTML_HEADER = doc/branding/milo-doxy-header.html
 HTML_FOOTER = doc/branding/milo-doxy-footer.html
 HTML_EXTRA_STYLESHEET= doc/branding/milo-doxygen.css
 HTML_EXTRA_FILES = doc/branding/milo.js
+HTML_DYNAMIC_SECTIONS = YES
 IMAGE_PATH = doc/img
+
+# Color: fe7221. HSV: 22, 87, 99.6. After normalization (doxygen has different
+# value range...): 78.98, 221.85, 239.04
+# Values below are hand-picked because doxygen apparently interprets them
+# in a different way than GIMP does. Min-max values listed below follow
+# doxygen docs, and they are insane.
+
+# Max is 359
+HTML_COLORSTYLE_HUE = 22
+# Max is 259
+HTML_COLORSTYLE_SAT = 220
+# Min is 40, max is 240
+HTML_COLORSTYLE_GAMMA = 100
 
 TAB_SIZE = 4
 INHERIT_DOCS = YES
@@ -52,7 +79,9 @@ ALLEXTERNALS = YES
 EXTERNAL_GROUPS = YES
 EXTERNAL_PAGES = YES
 
-HAVE_DOT = NO
+HAVE_DOT = YES
+CALL_GRAPH = YES
+CALLER_GRAPH = YES
 
 TAGFILES = ../../../milocodedatabase.doxytag=../../../../../doc/html
 

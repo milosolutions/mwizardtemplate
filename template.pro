@@ -1,7 +1,7 @@
 ## Milo Solutions - project file TEMPLATE
 #
 #
-## (c) Milo Solutions, 2016-2019
+## (c) Milo Solutions, 2016-2020
 
 QT = core
 
@@ -37,11 +37,12 @@ docs {
 
 TARGET = %{ProjectName}
 
-HEADERS +=
+HEADERS += src/utils/tags.h \\
+    src/utils/helpers.h
 
 SOURCES += src/main.cpp 
 
-RESOURCES +=  \\
+RESOURCES += \\
     qml/qml.qrc \\
     resources/resources.qrc
 
@@ -53,14 +54,51 @@ OTHER_FILES += \\
     license-Qt.txt \\
     .gitlab-ci.yml
 
-## Put all build files into build directory
-##  This also works with shadow building, so don't worry!
-BUILD_DIR = build
+## Put all build files into build directory, separated per arch (useful on
+## Android). This also works with shadow building, so don't worry!
+BUILD_DIR = build-$${QT_ARCH}
 OBJECTS_DIR = $$BUILD_DIR
 MOC_DIR = $$BUILD_DIR
 RCC_DIR = $$BUILD_DIR
 UI_DIR = $$BUILD_DIR
 DESTDIR = $$BUILD_DIR/bin
+
+CONFIG(debug, debug|release) {
+    message("Debug build - enabling address sanitizer!")
+    CONFIG += asan
+}
+
+asan {
+    message("Address sanitizer: enabled. Use only in debug builds")
+    LIBS += -lcurl
+    CONFIG += sanitizer sanitize_address
+    QMAKE_CXXFLAGS+="-fsanitize=address -fno-omit-frame-pointer"
+    QMAKE_CFLAGS+="-fsanitize=address -fno-omit-frame-pointer"
+    QMAKE_LFLAGS+="-fsanitize=address"
+    CONFIG += ubsan
+}
+
+msan {
+    message("Memory sanitizer: enabled. Use only in debug builds.")
+    LIBS += -lcurl
+    QMAKE_CXXFLAGS+="-fsanitize=memory"
+    QMAKE_LFLAGS+="-fsanitize=memory"
+    CONFIG += ubsan
+}
+
+tsan {
+    message("Thread sanitizer: enabled. Use only in debug builds")
+    LIBS += -lcurl
+    QMAKE_CXXFLAGS+="-fsanitize=thread"
+    QMAKE_LFLAGS+="-fsanitize=thread"
+    CONFIG += ubsan
+}
+
+ubsan {
+    message("Undefined behavior sanitizer: enabled. Use only in debug builds")
+    QMAKE_CXXFLAGS+="-fsanitize=undefined"
+    QMAKE_LFLAGS+="-fsanitize=undefined"
+}
 
 ## Platforms
 @if "%{WindowsChB}" == "WindowsChBChecked"
