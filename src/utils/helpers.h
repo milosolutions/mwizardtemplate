@@ -30,7 +30,7 @@ CHECK(QMetaObject::invokeMethod(
 #endif
 
 /*!
- * \ingroup GUI
+ * \\ingroup GUI
  *
  * General helper functions, not related to GUI.
  */
@@ -38,8 +38,8 @@ class Helpers
 {
 public:
     /*!
-     * Returns true if \a index is a valid index in \a container. To be valid,
-     * the index must be equal to 0 or larger, and smaller than \a container
+     * Returns true if \\a index is a valid index in \\a container. To be valid,
+     * the index must be equal to 0 or larger, and smaller than \\a container
      * size.
      */
     template<class Container>

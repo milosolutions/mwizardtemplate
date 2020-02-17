@@ -34,7 +34,6 @@ docs {
     QMAKE_SUBSTITUTES += doxy
 }
 
-
 TARGET = %{ProjectName}
 
 HEADERS += src/utils/tags.h \\

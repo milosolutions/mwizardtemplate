@@ -16,8 +16,8 @@ OTHER_FILES += \\
 DEB_ROOT=$${APP_NAME}_$${VERSION}
 DEB_DIR=deb_build
 
-isEmpty( DISTRO) {
-    include( distroDetection.pri)
+isEmpty(DISTRO) {
+    include(distroDetection.pri)
     DISTRO = $$detectDistribution()
 }
 
@@ -27,6 +27,7 @@ DAPPVERSION = $${VERSION}
 DSECTION = "base"
 DPRIORITY = "optional"
 #DDEPENDS = "libqt5core5a, libqt5gui5, libqt5widgets5"
+DDEPENDS = "libqt5core5a"
 
 DMAINTANER = $${COMPANY_NAME} $${COMPANY_DOMAIN}
 # NOTE: new line needs to start with space !
@@ -36,7 +37,7 @@ debControl.input = ./platforms/linux/control.in
 debControl.output = $$DEB_DIR/DEBIAN/control
 QMAKE_SUBSTITUTES += debControl
 
-include( "desktopEntry.pri")
+include("desktopEntry.pri")
 
 ## post build step, dpkg
 
@@ -47,12 +48,13 @@ NL = $$escape_expand(\\n\\t)
 #       this error will be triggered on normal development, one time compilation
 #       is not affected
 
+QMAKE_POST_LINK += echo "Preparing DEB package" $$NL
 QMAKE_POST_LINK += cd ./$$DEB_DIR $$NL
 
 #QMAKE_POST_LINK += mkdir -p ./$$DEB_DIR/usr/share/pixmaps $$NL
 QMAKE_POST_LINK += mkdir -p ./$$DEB_DIR/usr/bin $$NL
 #QMAKE_POST_LINK += cp $$_PRO_FILE_PWD_/resources/img/icon.png ./$$DEB_DIR/usr/share/pixmaps/%{ProjectName}.png $$NL
-QMAKE_POST_LINK += cp ./build/bin/$$TARGET ./$$DEB_DIR/usr/bin/$$TARGET $$NL
+QMAKE_POST_LINK += cp ./build-$${QT_ARCH}/bin/$${TARGET} ./$$DEB_DIR/usr/bin/$${TARGET} $$NL
 
 QMAKE_POST_LINK += dpkg-deb --build ./$$DEB_DIR ./$$DEB_ROOT.deb
 
