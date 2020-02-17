@@ -47,14 +47,14 @@ The new deployment tool is in:
 Now you can use the new, hardened `macdeployqt` the same way you use the regular
 version. For example:
 
-    $dest/macdeployqt/macdeployqt-hardened.app/Contents/MacOS/macdeployqt \
-        application.app -verbose=2 \
-        -codesign="$CODESIGN_STRING" \
+    $dest/macdeployqt/macdeployqt-hardened.app/Contents/MacOS/macdeployqt \\
+        application.app -verbose=2 \\
+        -codesign="$CODESIGN_STRING" \\
         -dmg
 
 You can then use the notarization script included together with this readme:
 
-    python3 notarize-macos.py "team@name" "app-password" "com.application" \
+    python3 notarize-macos.py "team@name" "app-password" "com.application" \\
         application.dmg
 
 For more information about notarization, see [Apple docs](https://developer.apple.com/documentation/security/notarizing_your_app_before_distribution#3087727).

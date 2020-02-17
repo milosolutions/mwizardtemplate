@@ -1,7 +1,7 @@
 #pragma once
 
 /*!
- * \ingroup GUI
+ * \\ingroup GUI
  *
  * Makes sure `condition` is true, otherwise crashes the application.
  *
@@ -9,7 +9,7 @@
  * similar pieces of code which should ALWAYS return true, but if developer
  * makes a mistake they only print warnings which are easy to miss.
  *
- \verbatim
+ \\verbatim
 CHECK(connect(object, &Class::someSignal,
               receiver, &OtherClass:someSlot,
               Qt::QueuedConnection));
@@ -18,7 +18,7 @@ CHECK(QMetaObject::invokeMethod(
     object, "functionName",
     Qt::QueuedConnection,
     Q_ARG(QVector, something));
- \endverbatim
+ \\endverbatim
  *
  */
 #if !defined(CHECK)

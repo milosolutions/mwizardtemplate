@@ -50,10 +50,10 @@ def main():
             print(check_output(['xcrun', 'stapler', 'staple', args.path]).decode('utf-8'))
             return
         if response['notarization-info']['Status'] == 'invalid':
-            raise RuntimeError('notarization failed, response was\n{}'.format(response))
+            raise RuntimeError('notarization failed, response was\\n{}'.format(response))
         sleep(3)
 
-    raise RuntimeError('notarization timed out, last response was\n{}'.format(response))
+    raise RuntimeError('notarization timed out, last response was\\n{}'.format(response))
 
 
 if __name__ == '__main__':
