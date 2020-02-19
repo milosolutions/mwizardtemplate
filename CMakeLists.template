@@ -12,15 +12,83 @@ project(%{ProjectName}
 )
 
 # This has to be below project() because it calls find_* function
-include(qtbase.cmake)
+find_package(Qt5 COMPONENTS REQUIRED Core)
+
+## Mark all warnings as errors
+if (NOT WIN32)
+  add_compile_options(-Werror -fPIC)
+endif (NOT WIN32)
+
+## Use concrete C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Find includes in corresponding build directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# Instruct CMake to run moc automatically when needed
+set(CMAKE_AUTOMOC ON)
+# Create code from a list of Qt designer ui files
+set(CMAKE_AUTOUIC ON)
+# Create code for Qt Resource Files
+set(CMAKE_AUTORCC ON)
+
+## Defines
+add_compile_definitions(QT_USE_QSTRINGBUILDER)
+
+# Enable LTCG (link time optimization)
+option (ltcg "Enable LTCG (link time optimization)" OFF)
+if (ltcg)
+  set_property(TARGET project-lib PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+  set_property(TARGET %{ProjectName} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+  message("Building with LTCG enabled")
+endif (ltcg)
+
+# TODO: add deployment code (like we have with qmake)
 
 # MCDB modules
-# TODO: parametrize (auto-insert based on modules chosen in wizard)
-add_subdirectory(milo/mlog)
+# MScripts is indentionally left out - there is no C++ code there
+
+@if "%{mbarcodescannerCheckBox}" == "mbarcodescannerChBChecked"
+add_subdirectory(milo/mbarcodescanner)
+@endif
+@if "%{mchartsCheckBox}" == "mchartsChBChecked"
+add_subdirectory(milo/mcharts)
+@endif
+@if "%{mconfigCheckBox}" == "mconfigChBChecked"
 add_subdirectory(milo/mconfig)
+@endif
+@if "%{mcryptoCheckBox}" == "mcryptoChBChecked"
+add_subdirectory(milo/mcrypto)
+@endif
+@if "%{mlogCheckBox}" == "mlogChBChecked"
+add_subdirectory(milo/mlog)
+@endif
+@if "%{mrestapiCheckBox}" == "mrestapiChBChecked"
+add_subdirectory(milo/mrestapi)
+@endif
+@if "%{msentryCheckBox}" == "msentryChBChecked"
+add_subdirectory(milo/msentry)
+@endif
+@if "%{msshtunnelCheckBox}" == "msshtunnelChBChecked"
+add_subdirectory(milo/msshtunnel)
+@endif
+@if "%{memailsystemCheckBox}" == "memailsystemChBChecked"
+add_subdirectory(milo/memailsystem)
+@endif
+@if "%{mcalendarCheckBox}" == "mcalendarChBChecked"
+add_subdirectory(milo/mcalendar)
+@endif
+@if "%{mmigrationsCheckBox}" == "mmigrationsChBChecked"
+add_subdirectory(milo/mmigrations)
+@endif
 
 # Unit tests
+#if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+include(CTest)
 add_subdirectory(tests)
+enable_testing()
+#endif ()
 
 set(SOURCES
   src/main.cpp
@@ -45,36 +113,95 @@ set(OTHER_FILES
   .gitlab-ci.yml
 )
 
-# TODO: parametrize (auto-insert based on modules chosen in wizard)
-add_executable(%{ProjectName} ${SOURCES} ${OTHER_FILES}
-  $<TARGET_OBJECTS:mlog>
+# TODO: add options to enable asan, msan, tsan and ubsan. See .pro file for
+# example flags.
+
+# Create LIBRARY with whole application code. It will be used in app executable
+# and also in tests
+
+add_library(project-lib ${SOURCES}
+@if "%{mbarcodescannerCheckBox}" == "mbarcodescannerChBChecked"
+  $<TARGET_OBJECTS:mbarcodescanner>
+@endif
+@if "%{mchartsCheckBox}" == "mchartsChBChecked"
+  $<TARGET_OBJECTS:mcharts>
+@endif
+@if "%{mconfigCheckBox}" == "mconfigChBChecked"
   $<TARGET_OBJECTS:mconfig>
+@endif
+@if "%{mcryptoCheckBox}" == "mcryptoChBChecked"
+  $<TARGET_OBJECTS:mcrypto>
+@endif
+@if "%{mlogCheckBox}" == "mlogChBChecked"
+  $<TARGET_OBJECTS:mlog>
+@endif
+@if "%{mrestapiCheckBox}" == "mrestapiChBChecked"
+  $<TARGET_OBJECTS:mrestapi>
+@endif
+@if "%{msentryCheckBox}" == "msentryChBChecked"
+  $<TARGET_OBJECTS:msentry>
+@endif
+@if "%{msshtunnelCheckBox}" == "msshtunnelChBChecked"
+  $<TARGET_OBJECTS:msshtunnel>
+@endif
+@if "%{memailsystemCheckBox}" == "memailsystemChBChecked"
+  $<TARGET_OBJECTS:memailsystem>
+@endif
+@if "%{mcalendarCheckBox}" == "mcalendarChBChecked"
+  $<TARGET_OBJECTS:mcalendar>
+@endif
+@if "%{mmigrationsCheckBox}" == "mmigrationsChBChecked"
+  $<TARGET_OBJECTS:mmigrations>
+@endif
 )
 
-# TODO: parametrize (auto-insert based on modules chosen in wizard)
-target_include_directories(%{ProjectName} PUBLIC
-  $<TARGET_PROPERTY:mlog,INCLUDE_DIRECTORIES>
+target_include_directories(project-lib PUBLIC
+  PUBLIC
+  $<INSTALL_INTERFACE:include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+@if "%{mbarcodescannerCheckBox}" == "mbarcodescannerChBChecked"
+  $<TARGET_PROPERTY:mbarcodescanner,INCLUDE_DIRECTORIES>
+@endif
+@if "%{mchartsCheckBox}" == "mchartsChBChecked"
+  $<TARGET_PROPERTY:mcharts,INCLUDE_DIRECTORIES>
+@endif
+@if "%{mconfigCheckBox}" == "mconfigChBChecked"
   $<TARGET_PROPERTY:mconfig,INCLUDE_DIRECTORIES>
+@endif
+@if "%{mcryptoCheckBox}" == "mcryptoChBChecked"
+  $<TARGET_PROPERTY:mcrypto,INCLUDE_DIRECTORIES>
+@endif
+@if "%{mlogCheckBox}" == "mlogChBChecked"
+  $<TARGET_PROPERTY:mlog,INCLUDE_DIRECTORIES>
+@endif
+@if "%{mrestapiCheckBox}" == "mrestapiChBChecked"
+  $<TARGET_PROPERTY:mrestapi,INCLUDE_DIRECTORIES>
+@endif
+@if "%{msentryCheckBox}" == "msentryChBChecked"
+  $<TARGET_PROPERTY:msentry,INCLUDE_DIRECTORIES>
+@endif
+@if "%{msshtunnelCheckBox}" == "msshtunnelChBChecked"
+  $<TARGET_PROPERTY:msshtunnel,INCLUDE_DIRECTORIES>
+@endif
+@if "%{memailsystemCheckBox}" == "memailsystemChBChecked"
+  $<TARGET_PROPERTY:memailsystem,INCLUDE_DIRECTORIES>
+@endif
+@if "%{mcalendarCheckBox}" == "mcalendarChBChecked"
+  $<TARGET_PROPERTY:mcalendar,INCLUDE_DIRECTORIES>
+@endif
+@if "%{mmigrationsCheckBox}" == "mmigrationsChBChecked"
+  $<TARGET_PROPERTY:mmigrations,INCLUDE_DIRECTORIES>
+@endif
 )
 
-# Mark all warnings as errors
-if (NOT WIN32)
-  target_compile_options(%{ProjectName} PRIVATE -Werror -fPIC)
-endif(WIN32)
+# Use LIBRARY in app executable
 
-# Defines
-target_compile_definitions(%{ProjectName} PRIVATE QT_USE_QSTRINGBUILDER)
+add_executable(%{ProjectName} src/main.cpp ${OTHER_FILES})
 
-# Enable LTCG (link time optimization)
-option (ltcg "Enable LTCG (link time optimization)" OFF)
-if (ltcg)
-  set_property(TARGET %{ProjectName} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
-  message("Building with LTCG enabled")
-endif (ltcg)
-
-# Use C++ 14 standard
-target_compile_features(%{ProjectName} PRIVATE cxx_std_14)
+target_link_libraries(project-lib
+  Qt5::Core
+)
 
 target_link_libraries(%{ProjectName}
-  Qt5::Core
+  project-lib
 )

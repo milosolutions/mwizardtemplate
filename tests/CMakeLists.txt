@@ -1,19 +1,16 @@
 
-include(../version.cmake)
-
 project(tests
-  VERSION ${VERSION}
-  DESCRIPTION "Unit tests"
+  VERSION 0.0.1
+  DESCRIPTION "Tests"
   LANGUAGES CXX
 )
 
-include(../qtbase.cmake)
+set(OTHER_FILES README-tests.md)
 
-find_package(Qt5 COMPONENTS REQUIRED Core)
+# Milo Code Database unit tests are located in their own directories
 
-enable_testing(true)
+# Project tests:
+add_subdirectory(tst_utils_helpers)
 
-add_subdirectory(tst_project)
-
-# TODO: parametrize (auto-insert based on modules chosen in wizard)
-add_subdirectory(../milo/mlog/tst_mlog milo/mlog/tst_mlog_bin)
+# To add a new unit test, copy one of the existing ones (like tst_utils_helpers)
+# and adjust it to your needs.

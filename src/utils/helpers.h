@@ -47,4 +47,4 @@ public:
     {
         return index >= 0 && index < int(container.size());
     }
-}
+};

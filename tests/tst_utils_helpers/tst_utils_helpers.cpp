@@ -1,5 +1,5 @@
 /*******************************************************************************
-Copyright (C) 2017 Milo Solutions
+Copyright (C) 2020 Milo Solutions
 Contact: https://www.milosolutions.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,28 +22,45 @@ SOFTWARE.
 *******************************************************************************/
 
 #include <QtTest>
-#include <QCoreApplication>
+#include <QObject>
+#include <QList>
+#include <QString>
 
-class Test%{JS: '%{ProjectName}'.replace(/[^A-Z0-9]+/ig, "_")} : public QObject
+#include "utils/helpers.h"
+
+class TestUtilsHelpers : public QObject
 {
-   Q_OBJECT
+    Q_OBJECT
 
 private slots:
     void initTestCase();
+    void testCheckMacro();
+    void testIndexCheck();
     void cleanupTestCase();
-
 };
 
-void Test%{JS: '%{ProjectName}'.replace(/[^A-Z0-9]+/ig, "_")}::initTestCase()
-{
-    QCoreApplication::setApplicationName("%{JS: '%{ProjectName}'.replace(/[^A-Z0-9]+/ig, "_")} Unit Test");
-    QCoreApplication::setOrganizationName("");
-}
-
-void Test%{JS: '%{ProjectName}'.replace(/[^A-Z0-9]+/ig, "_")}::cleanupTestCase()
+void TestUtilsHelpers::initTestCase()
 {
 }
 
-QTEST_MAIN(Test%{JS: '%{ProjectName}'.replace(/[^A-Z0-9]+/ig, "_")})
+void TestUtilsHelpers::testCheckMacro()
+{
+    QObject dummyObject;
+    CHECK(connect(&dummyObject, &QObject::objectNameChanged,
+                  &dummyObject, &QObject::setObjectName));
+}
 
-#include "tst_%{ProjectName}.moc"
+void TestUtilsHelpers::testIndexCheck()
+{
+    const QList<QString> list = { "just", "some", "test", "strings" };
+    QVERIFY(Helpers::isValidIndex(1, list));
+    QVERIFY(Helpers::isValidIndex(4, list) == false);
+}
+
+void TestUtilsHelpers::cleanupTestCase()
+{
+}
+
+QTEST_MAIN(TestUtilsHelpers)
+
+#include "tst_utils_helpers.moc"
