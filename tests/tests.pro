@@ -2,10 +2,29 @@
 
 TEMPLATE = subdirs
 
+# Milo Code Database tests:
+SUBDIRS += \\
+@if "%{msentryCheckBox}" == "msentryChBChecked"
+    ../milo/msentry/tst_msentry \\
+@endif
+@if "%{mrestapiCheckBox}" == "mrestapiChBChecked"
+    ../milo/mrestapi/tst_mrestapi \\
+@endif
+@if "%{mlogCheckBox}" == "mlogChBChecked"
+    ../milo/mlog/tst_mlog \\
+@endif
+@if "%{mcryptoCheckBox}" == "mcryptoChBChecked"
+    ../milo/mcrypto/tst_mcrypto \\
+@endif
+@if "%{mconfigCheckBox}" == "mconfigChBChecked"
+    ../milo/mconfig/tst_mconfig \\
+@endif
+@if "%{mmigrationsCheckBox}" == "mmigrationsChBChecked"
+    ../milo/mmigrations/tst_mmigrations \\
+@endif
+
 # Add new test cases here:
-SUBDIRS += \
-	../milo/mlog/tst_mlog \
-	../milo/mconfig/tst_mconfig \
+SUBDIRS += \\
     tst_utils_helpers
 
 
