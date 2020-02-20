@@ -1,12 +1,17 @@
 cmake_minimum_required(VERSION 3.9.0 FATAL_ERROR)
 if (POLICY CMP0043)
   cmake_policy(SET CMP0043 NEW)
-endif()
+endif ()
+
+# Fix project() setting VERSION parameter
+if (POLICY CMP0048)
+  cmake_policy(SET CMP0048 NEW)
+endif ()
 
 include(version.cmake)
 
 project(%{ProjectName}
-  VERSION ${VERSION}
+  VERSION ${APP_VERSION}
   DESCRIPTION "Milo code DB template file"
   LANGUAGES CXX
 )

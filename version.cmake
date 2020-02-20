@@ -1,4 +1,4 @@
-set(VERSION 0.0.1)
+set(APP_VERSION 0.0.1)
 set(APP_NAME "%{ProjectName}")
 set(COMPANY_NAME "Milo Solutions")
 set(COMPANY_DOMAIN "milosolutions.com")
@@ -20,7 +20,7 @@ set_property(GLOBAL APPEND
 
 add_compile_definitions(
   AppName=${APP_NAME}
-  AppVersion="${VERSION}"
+  AppVersion="${APP_VERSION}"
   CompanyName=${COMPANY_NAME}
   CompanyDomain=${COMPANY_DOMAIN}
   BuildDate="${BUILD_DATE}"
@@ -29,7 +29,7 @@ add_compile_definitions(
 
 message(
   "  App name: " ${APP_NAME} "\n"
-  "  Version: " ${VERSION} "\n"
+  "  Version: " ${APP_VERSION} "\n"
   "  Company: " ${COMPANY_NAME} "\n"
   "  Domain: " ${COMPANY_DOMAIN} "\n"
   "  Build date: " ${BUILD_DATE} "\n"
