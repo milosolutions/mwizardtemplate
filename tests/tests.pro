@@ -22,6 +22,12 @@ SUBDIRS += \\
 @if "%{mmigrationsCheckBox}" == "mmigrationsChBChecked"
     ../milo/mmigrations/tst_mmigrations \\
 @endif
+@if "%{mcalendarCheckBox}" == "mcalendarChBChecked"
+    ../milo/mcalendar/test_mcalendar \\
+@endif
+@if "%{msshtunnelCheckBox}" == "msshtunnelChBChecked"
+    ../milo/msshtunnel/test_msshtunnel \\
+@endif
 
 # Add new test cases here:
 SUBDIRS += \\
