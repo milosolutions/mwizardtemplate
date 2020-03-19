@@ -1,0 +1,30 @@
+{
+	"app-id": "org.milosolutions.%{ProjectName}.json",
+	"runtime": "org.kde.Platform",
+	"runtime-version": "5.14",
+	"sdk": "org.kde.Sdk",
+	"command": "%{ProjectName}",
+	"cleanup": [
+		"/include",
+		"/lib/cmake",
+		"*.a",
+		"*.cmake"
+	],
+	"finish-args": [
+		"--socket=x11",
+		"--filesystem=host",
+		"--share=network"
+	],
+	"modules" [
+		{
+			"name": "%{ProjectName}",
+			"buildsystem": "cmake-ninja",
+			"sources: [
+				{
+					"type": "",
+					"path": ""
+				}
+			]
+		}
+	]
+}
