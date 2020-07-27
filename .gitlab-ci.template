@@ -2,37 +2,46 @@ stages:
 - test
 - build
 - upload
-- cleanup
 
 #Global variables
 variables:
-    QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.12/android_armv7"
+    QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.14.2/android"
+    QT_PATH_LINUX: "/home/tools/Qt-OpenSource/5.14.2/gcc_64"
     ANDROID_SDK_ROOT: "/home/tools/android/android-sdk-linux"
-    ANDROID_NDK_ROOT: "/home/tools/android/android-ndk"
+    ANDROID_NDK_ROOT: "/home/tools/android/android-ndk-r21"
+    ANDROID_NDK_HOME: "$ANDROID_NDK_ROOT"
     ANDROID_NDK_TOOLCHAIN_VERSION: "4.9"
-    ANDROID_TARGET_PLATFORM: "android-23"
+    ANDROID_TARGET_PLATFORM: "android-28"
+    ANDROID_NDK_PLATFORM: "android-21"
+    ABIS: "armeabi-v7a"
+    #ABIS: "armeabi-v7a arm64-v8a x86 x86_64"
+    ANDROID_SIGN_COMMANDS: "--sign $CI_PROJECT_DIR/template/platforms/android/cert/gaiachain_cert.keystore gaiachain --storepass $ANDROID_KEYSTORE_PASS"
     JAVA_HOME: "/home/tools/jdk8"
+    SEAFILE_SERVER: "https://seafile.milosolutions.com"
+    SEAFILE_REPO_ID: "3df1ca9d-bc95-4424-b061-3f98c91dae3b"
 
 .common: &common
   allow_failure: false
   before_script:
-    - export OUT_PACKAGES_DIR="$HOME/packages/$CI_BUILD_REF"
     - export CORES=`nproc`
-    - mkdir -p $OUT_PACKAGES_DIR
+    #- mkdir -p $OUT_PACKAGES_DIR
+    - mkdir -p $CI_PROJECT_DIR/build
     - git submodule sync --recursive
     - git submodule update --init --recursive
     - git submodule status --recursive
+  artifacts:
+    paths:
+      - build/
+    expire_in: 30 mins
 
 unit_tests:
   <<: *common
   tags:
     - LinuxServer
   stage: test
-  variables:
-    QT_PATH: "/home/tools/Qt-OpenSource/5.12/gcc_64"
   script:
     - cd $CI_PROJECT_DIR/tests
-    - $QT_PATH/bin/qmake
+    - $QT_PATH_LINUX/bin/qmake
     - make -j $CORES
     - make check TESTARGS="-platform offscreen"
 
@@ -51,7 +60,8 @@ android_build:
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/android-build
     - cd $CI_PROJECT_DIR
     - $QT_PATH_ANDROID/bin/androiddeployqt --output android-build --input android-lib$CI_PROJECT_NAME.so-deployment-settings.json --android-platform $ANDROID_TARGET_PLATFORM --gradle
-    - cp -f android-build/build/outputs/apk/android-build-release.apk $OUT_PACKAGES_DIR/$PACKAGE_NAME
+    - export BUILD_TIMESTAMP=`date +%Y-%m-%d`
+    - cp -f android-build/build/outputs/apk/release/android-build-$BUILD_TYPE-signed.apk $CI_PROJECT_DIR/build/"$BUILD_TIMESTAMP"-$PACKAGE_NAME
 
 # Linux
 linux_build:
@@ -59,11 +69,9 @@ linux_build:
   tags:
     - LinuxServer
   stage: build
-  variables:
-    QT_PATH: "/home/tools/Qt/5.12/gcc_64/"
   script:
     - cd $CI_PROJECT_DIR
-    - $QT_PATH/bin/qmake
+    - $QT_PATH_LINUX/bin/qmake
     - make -j $CORES
     - make install INSTALL_ROOT=$CI_PROJECT_DIR/build
 
@@ -108,28 +116,13 @@ upload_job:
   <<: *common
   tags:
     - LinuxServer
+    - LinuxAndroid
   stage: upload
   when: on_success
   variables:
     UPLOAD_SCRIPT: "$CI_PROJECT_DIR/milo/mscripts/seafile/upload_to_seafile.sh"
   script:
-    - export BUILD_TIMESTAMP=`date +%Y-%m-%d`
-    - cd $OUT_PACKAGES_DIR
-    - ls -lh
-    - APK_PACKAGES=*.apk
-    - for PACKAGE in $APK_PACKAGES; do mv $PACKAGE "$BUILD_TIMESTAMP"_"$PACKAGE"; done
-    - for PACKAGE in * ; do $UPLOAD_SCRIPT -f $PACKAGE -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -t $SEAFILE_API_TOKEN; done
+    - ls -lh build/
+    # From: https://unix.stackexchange.com/questions/239772/bash-iterate-file-list-except-when-empty
+    - find build/ -mindepth 1 -maxdepth 1 -type f -name '*.apk' -exec bash -c '$UPLOAD_SCRIPT -f "$0" -s $SEAFILE_SERVER -r $SEAFILE_REPO_ID -d "packages/" -t $SEAFILE_API_TOKEN' {} \;
     - $CI_PROJECT_DIR/milo/mscripts/mattermost-notification.sh
-
-cleanup:
-  <<: *common
-  tags:
-    - LinuxServer
-    - LinuxAndroid
-    - WindowsDesktop
-    - macOS
-  stage: cleanup
-  when: always
-  script:
-    - ls -lh $OUT_PACKAGES_DIR
-    - rm -rf $OUT_PACKAGES_DIR
