@@ -124,79 +124,12 @@ set(OTHER_FILES
 # Create LIBRARY with whole application code. It will be used in app executable
 # and also in tests
 
-add_library(project-lib ${SOURCES}
-@if "%{mbarcodescannerCheckBox}" == "mbarcodescannerChBChecked"
-  $<TARGET_OBJECTS:mbarcodescanner>
-@endif
-@if "%{mchartsCheckBox}" == "mchartsChBChecked"
-  $<TARGET_OBJECTS:mcharts>
-@endif
-@if "%{mconfigCheckBox}" == "mconfigChBChecked"
-  $<TARGET_OBJECTS:mconfig>
-@endif
-@if "%{mcryptoCheckBox}" == "mcryptoChBChecked"
-  $<TARGET_OBJECTS:mcrypto>
-@endif
-@if "%{mlogCheckBox}" == "mlogChBChecked"
-  $<TARGET_OBJECTS:mlog>
-@endif
-@if "%{mrestapiCheckBox}" == "mrestapiChBChecked"
-  $<TARGET_OBJECTS:mrestapi>
-@endif
-@if "%{msentryCheckBox}" == "msentryChBChecked"
-  $<TARGET_OBJECTS:msentry>
-@endif
-@if "%{msshtunnelCheckBox}" == "msshtunnelChBChecked"
-  $<TARGET_OBJECTS:msshtunnel>
-@endif
-@if "%{memailsystemCheckBox}" == "memailsystemChBChecked"
-  $<TARGET_OBJECTS:memailsystem>
-@endif
-@if "%{mcalendarCheckBox}" == "mcalendarChBChecked"
-  $<TARGET_OBJECTS:mcalendar>
-@endif
-@if "%{mmigrationsCheckBox}" == "mmigrationsChBChecked"
-  $<TARGET_OBJECTS:mmigrations>
-@endif
-)
+add_library(project-lib ${SOURCES})
 
-target_include_directories(project-lib PUBLIC
+target_include_directories(project-lib
   PUBLIC
   $<INSTALL_INTERFACE:include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-@if "%{mbarcodescannerCheckBox}" == "mbarcodescannerChBChecked"
-  $<TARGET_PROPERTY:mbarcodescanner,INCLUDE_DIRECTORIES>
-@endif
-@if "%{mchartsCheckBox}" == "mchartsChBChecked"
-  $<TARGET_PROPERTY:mcharts,INCLUDE_DIRECTORIES>
-@endif
-@if "%{mconfigCheckBox}" == "mconfigChBChecked"
-  $<TARGET_PROPERTY:mconfig,INCLUDE_DIRECTORIES>
-@endif
-@if "%{mcryptoCheckBox}" == "mcryptoChBChecked"
-  $<TARGET_PROPERTY:mcrypto,INCLUDE_DIRECTORIES>
-@endif
-@if "%{mlogCheckBox}" == "mlogChBChecked"
-  $<TARGET_PROPERTY:mlog,INCLUDE_DIRECTORIES>
-@endif
-@if "%{mrestapiCheckBox}" == "mrestapiChBChecked"
-  $<TARGET_PROPERTY:mrestapi,INCLUDE_DIRECTORIES>
-@endif
-@if "%{msentryCheckBox}" == "msentryChBChecked"
-  $<TARGET_PROPERTY:msentry,INCLUDE_DIRECTORIES>
-@endif
-@if "%{msshtunnelCheckBox}" == "msshtunnelChBChecked"
-  $<TARGET_PROPERTY:msshtunnel,INCLUDE_DIRECTORIES>
-@endif
-@if "%{memailsystemCheckBox}" == "memailsystemChBChecked"
-  $<TARGET_PROPERTY:memailsystem,INCLUDE_DIRECTORIES>
-@endif
-@if "%{mcalendarCheckBox}" == "mcalendarChBChecked"
-  $<TARGET_PROPERTY:mcalendar,INCLUDE_DIRECTORIES>
-@endif
-@if "%{mmigrationsCheckBox}" == "mmigrationsChBChecked"
-  $<TARGET_PROPERTY:mmigrations,INCLUDE_DIRECTORIES>
-@endif
 )
 
 # Use LIBRARY in app executable
@@ -204,6 +137,39 @@ target_include_directories(project-lib PUBLIC
 add_executable(%{ProjectName} src/main.cpp ${OTHER_FILES})
 
 target_link_libraries(project-lib
+@if "%{mlogCheckBox}" == "mlogChBChecked"
+  mlog
+@endif
+@if "%{mbarcodescannerCheckBox}" == "mbarcodescannerChBChecked"
+  mbarcodescanner
+@endif
+@if "%{mchartsCheckBox}" == "mchartsChBChecked"
+  mcharts
+@endif
+@if "%{mconfigCheckBox}" == "mconfigChBChecked"
+  mconfig
+@endif
+@if "%{mcryptoCheckBox}" == "mcryptoChBChecked"
+  mcrypto
+@endif
+@if "%{mrestapiCheckBox}" == "mrestapiChBChecked"
+  mrestapi
+@endif
+@if "%{msentryCheckBox}" == "msentryChBChecked"
+  msentry
+@endif
+@if "%{msshtunnelCheckBox}" == "msshtunnelChBChecked"
+  msshtunnel
+@endif
+@if "%{memailsystemCheckBox}" == "memailsystemChBChecked"
+  memailsystem
+@endif
+@if "%{mcalendarCheckBox}" == "mcalendarChBChecked"
+  mcalendar
+@endif
+@if "%{mmigrationsCheckBox}" == "mmigrationsChBChecked"
+  mmigrations
+@endif
   Qt5::Core
 )
 
