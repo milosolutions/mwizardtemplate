@@ -51,6 +51,13 @@ endif (ltcg)
 
 # TODO: add deployment code (like we have with qmake)
 
+# Unit tests
+#if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+include(CTest)
+add_subdirectory(tests)
+enable_testing()
+#endif ()
+
 # MCDB modules
 # MScripts is indentionally left out - there is no C++ code there
 
@@ -87,13 +94,6 @@ add_subdirectory(milo/mcalendar)
 @if "%{mmigrationsCheckBox}" == "mmigrationsChBChecked"
 add_subdirectory(milo/mmigrations)
 @endif
-
-# Unit tests
-#if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-include(CTest)
-add_subdirectory(tests)
-enable_testing()
-#endif ()
 
 set(SOURCES
   src/main.cpp
