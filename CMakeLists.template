@@ -91,8 +91,8 @@ add_subdirectory(milo/memailsystem)
 @if "%{mcalendarCheckBox}" == "mcalendarChBChecked"
 add_subdirectory(milo/mcalendar)
 @endif
-@if "%{mmigrationsCheckBox}" == "mmigrationsChBChecked"
-add_subdirectory(milo/mmigrations)
+@if "%{mdatabaseCheckBox}" == "mdatabaseChBChecked"
+add_subdirectory(milo/mdatabase)
 @endif
 
 set(SOURCES
@@ -167,8 +167,8 @@ target_link_libraries(project-lib
 @if "%{mcalendarCheckBox}" == "mcalendarChBChecked"
   mcalendar
 @endif
-@if "%{mmigrationsCheckBox}" == "mmigrationsChBChecked"
-  mmigrations
+@if "%{mdatabaseCheckBox}" == "mdatabaseChBChecked"
+  mdatabase
 @endif
   Qt5::Core
 )

@@ -144,6 +144,6 @@ include(milo/memailsystem/memailsystem.pri)
 @if "%{mcalendarCheckBox}" == "mcalendarChBChecked"
 include(milo/mcalendar/mcalendar.pri)
 @endif
-@if "%{mmigrationsCheckBox}" == "mmigrationsChBChecked"
-include(milo/mmigrations/mmigrations.pri)
+@if "%{mdatabaseCheckBox}" == "mdatabaseChBChecked"
+include(milo/mdatabase/mdatabase.pri)
 @endif
