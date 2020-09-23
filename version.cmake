@@ -19,10 +19,10 @@ set_property(GLOBAL APPEND
   "${CMAKE_SOURCE_DIR}/.git/index")
 
 add_compile_definitions(
-  AppName=${APP_NAME}
+  AppName="${APP_NAME}"
   AppVersion="${APP_VERSION}"
-  CompanyName=${COMPANY_NAME}
-  CompanyDomain=${COMPANY_DOMAIN}
+  CompanyName="${COMPANY_NAME}"
+  CompanyDomain="${COMPANY_DOMAIN}"
   BuildDate="${BUILD_DATE}"
   GitCommit="${SHORT_HASH}"
   )

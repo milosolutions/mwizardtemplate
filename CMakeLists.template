@@ -176,3 +176,28 @@ target_link_libraries(project-lib
 target_link_libraries(%{ProjectName}
   project-lib
 )
+
+SET(CPACK_GENERATOR "") # DEB;RPM;NSIS
+set(CPACK_PACKAGE_VENDOR "${COMPANY_NAME}")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Package description (title)")
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+
+## Platforms
+#@if "%{WindowsChB}" == "WindowsChBChecked"
+#include(platforms/windows/windows.pri)
+#@endif
+#@if "%{MacChB}" == "MacChBChecked"
+#include(platforms/mac/mac.pri)
+#@endif
+#@if "%{AndroidChB}" == "AndroidChBChecked"
+#include(platforms/android/android.pri)
+#@endif
+@if "%{LinuxChB}" == "LinuxChBChecked"
+add_subdirectory(platforms/linux)
+@endif
+
+INCLUDE(CPack)
