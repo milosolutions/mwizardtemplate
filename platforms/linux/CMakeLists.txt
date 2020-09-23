@@ -19,7 +19,6 @@ install(TARGETS %{ProjectName}
 string(APPEND CPACK_GENERATOR "DEB;RPM")
 
 SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "${COMPANY_NAME}")
-SET(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Package description (title)")
 SET(CPACK_DEBIAN_COMPRESSION_TYPE "xz")
 
 # libqt5widgets5, libqt5qml5, libqt5quick5, etc.
