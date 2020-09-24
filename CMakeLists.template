@@ -45,7 +45,7 @@ add_compile_definitions(QT_USE_QSTRINGBUILDER)
 option (ltcg "Enable LTCG (link time optimization)" OFF)
 if (ltcg)
   set_property(TARGET project-lib PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
-  set_property(TARGET %{ProjectName} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+  set_property(TARGET ${PROJECT_NAME} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
   message("Building with LTCG enabled")
 endif (ltcg)
 
@@ -134,7 +134,7 @@ target_include_directories(project-lib
 
 # Use LIBRARY in app executable
 
-add_executable(%{ProjectName} src/main.cpp ${OTHER_FILES})
+add_executable(${PROJECT_NAME} src/main.cpp ${OTHER_FILES})
 
 target_link_libraries(project-lib
 @if "%{mlogCheckBox}" == "mlogChBChecked"
@@ -173,32 +173,44 @@ target_link_libraries(project-lib
   Qt5::Core
 )
 
-target_link_libraries(%{ProjectName}
+target_link_libraries(${PROJECT_NAME}
   project-lib
 )
 
+# More info:
+# https://cmake.org/cmake/help/latest/module/CPack.html#variable:CPACK_PACKAGE_DESCRIPTION
 SET(CPACK_GENERATOR "")
+set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 set(CPACK_PACKAGE_VENDOR "${COMPANY_NAME}")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Package description (title, brief)")
 set(CPACK_PACKAGE_DESCRIPTION "Package description (contents - long)")
 set(CPACK_PACKAGE_HOMEPAGE_URL "${COMPANY_DOMAIN}")
-set(CPACK_PACKAGE_ICON "path/to/icon")
-set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/resources/icon.png")
+# Welcome image used by some installers on macOS and Windows
+#set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/resources/")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+set(CPACK_PACKAGE_CHECKSUM "SHA512")
+# This generates Start Menu entries with format "executable;Start menu name"
+set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME};${PROJECT_NAME}")
+set(CPACK_STRIP_FILES ON)
+
+# Here you can modify the package name
+#set(CPACK_PACKAGE_FILE_NAME "")
+# Here you can modify subfolder below installation prefix - used by some \
+# generators (NSIS)
+#set(CPACK_PACKAGE_INSTALL_DIRECTORY "")
 
 ## Platforms
-#@if "%{WindowsChB}" == "WindowsChBChecked"
-#include(platforms/windows/windows.pri)
-#@endif
-#@if "%{MacChB}" == "MacChBChecked"
-#include(platforms/mac/mac.pri)
-#@endif
-#@if "%{AndroidChB}" == "AndroidChBChecked"
-#include(platforms/android/android.pri)
-#@endif
+@if "%{WindowsChB}" == "WindowsChBChecked"
+add_subdirectory(platforms/windows)
+@endif
+@if "%{MacChB}" == "MacChBChecked"
+add_subdirectory(platforms/mac)
+@endif
+@if "%{AndroidChB}" == "AndroidChBChecked"
+add_subdirectory(platforms/android)
+@endif
 @if "%{LinuxChB}" == "LinuxChBChecked"
 add_subdirectory(platforms/linux)
 @endif
