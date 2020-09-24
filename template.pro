@@ -39,7 +39,7 @@ TARGET = %{ProjectName}
 HEADERS += src/utils/tags.h \\
     src/utils/helpers.h
 
-SOURCES += src/main.cpp 
+SOURCES += src/main.cpp
 
 RESOURCES += \\
     qml/qml.qrc \\
@@ -100,18 +100,23 @@ ubsan {
 }
 
 ## Platforms
-@if "%{WindowsChB}" == "WindowsChBChecked"
-include(platforms/windows/windows.pri)
-@endif
-@if "%{MacChB}" == "MacChBChecked"
-include(platforms/mac/mac.pri)
-@endif
-@if "%{AndroidChB}" == "AndroidChBChecked"
-include(platforms/android/android.pri)
-@endif
-@if "%{LinuxChB}" == "LinuxChBChecked"
-include(platforms/linux/linux.pri)
-@endif
+win32 {
+    include(platforms/windows/windows.pri)
+}
+
+unix {
+    mac {
+        include(platforms/mac/mac.pri)
+    }
+
+    android {
+        include(platforms/android/android.pri)
+    }
+
+    !mac:!android {
+        include(platforms/linux/linux.pri)
+    }
+}
 
 ## Modules
 @if "%{mbarcodescannerCheckBox}" == "mbarcodescannerChBChecked"
