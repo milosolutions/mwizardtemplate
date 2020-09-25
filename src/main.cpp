@@ -45,10 +45,11 @@ int main(int argc, char *argv[]) {
     //MLog::instance();
     // Set up basic application data. Modify this to your needs
     QCoreApplication app(argc, argv);
-    app.setApplicationVersion(AppVersion);
-    app.setOrganizationName("Milo Solutions");
-    app.setOrganizationDomain("milosolutions.com");
+    app.setApplicationVersion(ApplicationVersion);
+    app.setOrganizationName(CompanyName);
+    app.setOrganizationDomain(CompanyDomain);
     app.setApplicationName("%{ProjectName}");
+
     //logger()->setLogLevel(MLog::DebugLog);
     //logger()->enableLogToFile(app.applicationName());
     qCInfo(coreMain) << "\\nName:" << app.applicationName()

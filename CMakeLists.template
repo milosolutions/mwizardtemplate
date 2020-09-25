@@ -145,7 +145,7 @@ target_compile_options(project-lib PRIVATE
   $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
     -Werror -Wall -Wextra -Wconversion -Wsign-conversion -pedantic-errors -fPIC>
   $<$<CXX_COMPILER_ID:MSVC>:
-    /WX /W4>
+    /WX /W3>
 )
 
 # Use LIBRARY in app executable
@@ -212,7 +212,7 @@ set(CPACK_PACKAGE_HOMEPAGE_URL "${COMPANY_DOMAIN}")
 set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/resources/icon.png")
 # Welcome image used by some installers on macOS and Windows
 #set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/resources/")
-#set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_CHECKSUM "SHA512")
 # This generates Start Menu entries with format "executable;Start menu name"
