@@ -9,7 +9,7 @@ if (POLICY CMP0048)
 endif ()
 
 project(%{ProjectName}
-  VERSION ${APP_VERSION}
+  VERSION 0.0.1
   DESCRIPTION "Milo code DB template file"
   LANGUAGES CXX
 )
@@ -205,13 +205,14 @@ target_link_libraries(${PROJECT_NAME}
 SET(CPACK_GENERATOR "")
 set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 set(CPACK_PACKAGE_VENDOR "${COMPANY_NAME}")
+set(CPACK_PACKAGE_CONTACT "${COMPANY_NAME}")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Package description (title, brief)")
 set(CPACK_PACKAGE_DESCRIPTION "Package description (contents - long)")
 set(CPACK_PACKAGE_HOMEPAGE_URL "${COMPANY_DOMAIN}")
 set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/resources/icon.png")
 # Welcome image used by some installers on macOS and Windows
 #set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/resources/")
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md")
+#set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
 set(CPACK_PACKAGE_CHECKSUM "SHA512")
 # This generates Start Menu entries with format "executable;Start menu name"
@@ -226,18 +227,18 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
 
 ## Platforms
 if(WIN32)
-  add_subdirectory(platforms/windows)
+  include(platforms/windows/windows.cmake)
 endif()
 
 if(ANDROID)
-  add_subdirectory(platforms/android)
+  include(platforms/android/android.cmake)
 endif()
 
 if(UNIX)
   if(APPLE)
-    add_subdirectory(platforms/mac)
+    include(platforms/mac/mac.cmake)
   else()
-    add_subdirectory(platforms/linux)
+    include(platforms/linux/linux.cmake)
   endif()
 endif()
 

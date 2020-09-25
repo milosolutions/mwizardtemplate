@@ -1,6 +1,6 @@
 
 project(tests
-  VERSION ${APP_VERSION}
+  VERSION ${PROJECT_VERSION}
   DESCRIPTION "Tests"
   LANGUAGES CXX
 )
