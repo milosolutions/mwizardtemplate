@@ -16,7 +16,8 @@ install(TARGETS ${PROJECT_NAME}
 #)
 
 
-string(APPEND CPACK_GENERATOR "DEB;RPM")
+string(APPEND CPACK_GENERATOR ";DEB;RPM")
+list(APPEND PACKAGE_EXTENSIONS "deb" "rpm")
 
 ## Debian
 # More info:

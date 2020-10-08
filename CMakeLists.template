@@ -21,7 +21,7 @@ include(version.cmake)
 # Check http://doc.qt.io/qt-5/deployment-android.html for more information.
 # They need to be set before the find_package(Qt5 ...) call.
 if(ANDROID)
-  set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/platforms/android/android")
+#  set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/platforms/android/android")
 #  if (ANDROID_ABI STREQUAL "armeabi-v7a")
 #    set(ANDROID_EXTRA_LIBS
 #      ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libcrypto.so
@@ -31,7 +31,7 @@ endif()
 
 # This has to be below project() because it calls find_* function
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Gui Quick REQUIRED)
 
 ## Use concrete C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -57,8 +57,6 @@ if (ltcg)
   set_property(TARGET ${PROJECT_NAME} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
   message("Building with LTCG enabled")
 endif (ltcg)
-
-# TODO: add deployment code (like we have with qmake)
 
 # Unit tests
 #if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
@@ -105,7 +103,6 @@ add_subdirectory(milo/mdatabase)
 @endif
 
 set(SOURCES
-  src/main.cpp
   src/utils/tags.h
   src/utils/helpers.h
 )
@@ -133,7 +130,7 @@ set(OTHER_FILES
 # Create LIBRARY with whole application code. It will be used in app executable
 # and also in tests
 
-add_library(project-lib ${SOURCES})
+add_library(project-lib STATIC ${SOURCES})
 
 target_include_directories(project-lib
   PUBLIC
@@ -143,16 +140,23 @@ target_include_directories(project-lib
 
 target_compile_options(project-lib PRIVATE
   $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
-    -Werror -Wall -Wextra -Wconversion -Wsign-conversion -pedantic-errors -fPIC>
+    -Werror -Wall -Wextra -Wconversion -Wsign-conversion -pedantic-errors -Wno-gnu-zero-variadic-macro-arguments -fPIC>
   $<$<CXX_COMPILER_ID:MSVC>:
     /WX /W3>
 )
 
 # Use LIBRARY in app executable
 if(ANDROID)
-  add_library(${PROJECT_NAME} src/main.cpp ${OTHER_FILES})
+  add_library(${PROJECT_NAME} SHARED src/main.cpp ${RESOURCES} ${OTHER_FILES})
 else()
-  add_executable(${PROJECT_NAME} src/main.cpp ${OTHER_FILES})
+  if (WIN32)
+    add_executable(${PROJECT_NAME} WIN32 src/main.cpp ${RESOURCES} ${OTHER_FILES})
+  elseif(APPLE)
+
+    add_executable(${PROJECT_NAME} MACOSX_BUNDLE src/main.cpp ${RESOURCES} ${OTHER_FILES})
+  else()
+    add_executable(${PROJECT_NAME} src/main.cpp ${RESOURCES} ${OTHER_FILES})
+  endif()
 endif()
 
 target_compile_definitions(${PROJECT_NAME}
@@ -198,11 +202,14 @@ target_link_libraries(project-lib
 
 target_link_libraries(${PROJECT_NAME}
   project-lib
+  Qt${QT_VERSION_MAJOR}::Gui
+  Qt${QT_VERSION_MAJOR}::Quick
 )
 
 # More info:
 # https://cmake.org/cmake/help/latest/module/CPack.html#variable:CPACK_PACKAGE_DESCRIPTION
-SET(CPACK_GENERATOR "")
+SET(CPACK_GENERATOR "7Z")
+SET(PACKAGE_EXTENSIONS "") # "7z" "sha512"
 set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 set(CPACK_PACKAGE_VENDOR "${COMPANY_NAME}")
 set(CPACK_PACKAGE_CONTACT "${COMPANY_NAME}")
@@ -232,14 +239,45 @@ endif()
 
 if(ANDROID)
   include(platforms/android/android.cmake)
-endif()
-
-if(UNIX)
-  if(APPLE)
-    include(platforms/mac/mac.cmake)
-  else()
-    include(platforms/linux/linux.cmake)
+else()
+  if(UNIX)
+    if(APPLE)
+      include(platforms/mac/mac.cmake)
+    else()
+      include(platforms/linux/linux.cmake)
+    endif()
   endif()
 endif()
 
-INCLUDE(CPack)
+message("CPack generators are: ${CPACK_GENERATOR}")
+message("Extensions uploaded to Seafile are: ${PACKAGE_EXTENSIONS}")
+
+include(CPack)
+
+## Upload to Seafile
+# This code generates a set of targets for upload to Seafile. Targets do not
+# have any preset dependency but should be run *after* CPack (after call to
+# 'make package').
+#
+# For example on Linux ${PACKAGE_EXTENSIONS} are set to "deb rpm" and as
+# a result, targets "upload_deb" and "upload_rpm" will be available.
+#
+if(DEFINED ENV{SEAFILE_TOKEN})
+  # Upload each of generated packages
+  foreach(EXTENSION ${PACKAGE_EXTENSIONS})
+    add_custom_target(
+      upload_${EXTENSION}
+      COMMAND "${CMAKE_COMMAND}"
+        -D NAME_BASE=${PROJECT_NAME}
+        -D EXTENSION=${EXTENSION}
+        -D BIN_DIR=${CMAKE_BINARY_DIR}
+        -D BUILD_DATE=${BUILD_DATE}
+        -P "${CMAKE_CURRENT_SOURCE_DIR}/milo/mscripts/seafile/upload.cmake"
+      COMMENT "Renaming and uploading ${EXTENSION} packages"
+      VERBATIM
+      USES_TERMINAL
+    )
+  endforeach()
+else()
+  message("Not uploading to Seafile because SEAFILE_TOKEN is empty")
+endif()

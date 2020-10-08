@@ -1,0 +1,86 @@
+stages:
+- test
+- build
+
+#Global variables
+variables:
+    QT_PATH_ANDROID: "/home/tools/Qt-OpenSource/5.14.2/android"
+    QT_PATH_LINUX: "/home/tools/Qt-OpenSource/5.14.2/gcc_64"
+    QT_PATH_WINDOWS: "C:\\Tools\\Qt-OpenSource\\5.14.2\\msvc2017_64"
+    QT_PATH_MACOS: "/Users/Tools/Qt-OpenSource/5.14.1/clang_64"
+    ANDROID_SDK_ROOT: "/home/tools/android/android-sdk-linux"
+    ANDROID_NDK_ROOT: "/home/tools/android/android-ndk-r21"
+    ANDROID_NDK_HOME: "$ANDROID_NDK_ROOT"
+    #ANDROID_NDK_TOOLCHAIN_VERSION: "4.9"
+    #ANDROID_TARGET_PLATFORM: "android-28"
+    ANDROID_NDK_PLATFORM: "21"
+    ABIS: "armeabi-v7a"
+    #ABIS: "armeabi-v7a arm64-v8a x86 x86_64"
+    ANDROID_SIGN_COMMANDS: "--sign $CI_PROJECT_DIR/template/platforms/android/cert/gaiachain_cert.keystore gaiachain --storepass $ANDROID_KEYSTORE_PASS"
+    JAVA_HOME: "/home/tools/jdk8"
+    SEAFILE_SERVER: "https://seafile.milosolutions.com"
+    SEAFILE_REPO_ID: "3df1ca9d-bc95-4424-b061-3f98c91dae3b"
+
+.common: &common
+  allow_failure: false
+  before_script:
+    - git submodule sync --recursive
+    - git submodule update --init --recursive
+    - git submodule status --recursive
+
+unit_tests:
+  <<: *common
+  tags:
+    - LinuxDesktop
+  stage: test
+  script:
+    - cmake -DCMAKE_BUILD_TYPE:String=Release -DCMAKE_PREFIX_PATH:STRING="${QT_PATH_LINUX}" .
+    - cmake -E env CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --parallel $(nproc) --config Release --target all test
+
+# Android
+android_build:
+  <<: *common
+  tags:
+    - LinuxAndroid
+  stage: build
+  script:
+    - mkdir build
+    - cd build
+    - cmake -Dforce_debug_apk=ON -DCMAKE_BUILD_TYPE:String=Release -DCMAKE_PREFIX_PATH:STRING="${QT_PATH_ANDROID}" -DANDROID_NATIVE_API_LEVEL:STRING=${ANDROID_NDK_PLATFORM} -DANDROID_NDK:PATH="${ANDROID_NDK_ROOT}" -DCMAKE_TOOLCHAIN_FILE:PATH="${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake" -DANDROID_ABI:STRING=armeabi-v7a -DANDROID_SDK:PATH="${ANDROID_SDK_ROOT}" -DANDROID_STL:STRING=c++_shared -DCMAKE_FIND_ROOT_PATH:PATH="${QT_PATH_ANDROID}" -DANDROID_ABIS="${ABIS}" ../
+    - cmake --build . --parallel $(nproc) --config Release --target all apk upload_apk
+
+# Linux
+linux_build:
+  <<: *common
+  tags:
+    - LinuxDesktop
+  stage: build
+  script:
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_BUILD_TYPE:String=Release -DCMAKE_PREFIX_PATH:STRING="${QT_PATH_LINUX}" ../
+    - cmake --build . --parallel $(nproc) --config Release --target package upload_deb upload_rpm
+
+# Windows
+windows_build:
+  <<: *common
+  tags:
+    - WindowsDesktop
+  stage: build
+  script:
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_BUILD_TYPE:String=Release -DCMAKE_PREFIX_PATH:STRING="${QT_PATH_WINDOWS}" ../
+    - cmake --build . --parallel 4 --config Release --target package upload_exe
+
+# macOS
+macos_build:
+  <<: *common
+  tags:
+    - macOS
+  stage: build
+  script:
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_BUILD_TYPE:String=Release -DCMAKE_PREFIX_PATH:STRING="${QT_PATH_MACOS}" ../
+    - cmake --build . --parallel $(nproc) --config Release --verbose --target package upload_dmg upload_7z

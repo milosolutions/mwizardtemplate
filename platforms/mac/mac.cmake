@@ -1,18 +1,12 @@
-install(TARGETS ${PROJECT_NAME}
-  #CONFIGURATIONS Release
-  #LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
-)
+#install(TARGETS ${PROJECT_NAME}
+#  CONFIGURATIONS Release
+#  LIBRARY DESTINATION lib
+#  RUNTIME DESTINATION bin
+#)
 
 #install(FILES someFileYouNeedToDeploy
 #  #CONFIGURATIONS Release
 #  DESTINATION include/someDir
-#)
-
-#install(DIRECTORY directories to deploy
-#  #CONFIGURATIONS Release
-#  DESTINATION include/someDir
-#  PATTERN *.h
 #)
 
 ## macOS deployment (macdeployqt)
@@ -23,14 +17,32 @@ get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
 get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
 find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_qt_bin_dir}")
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND "${MACDEPLOYQT_EXECUTABLE}"
-        "$<TARGET_FILE_DIR:${PROJECT_NAME}>/../.."
-        -always-overwrite
-    COMMENT "Running macdeployqt..."
+# https://doc.qt.io/qt-5/macos-deployment.html#the-mac-deployment-tool
+add_custom_command(
+  TARGET ${PROJECT_NAME} POST_BUILD
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  COMMAND "${MACDEPLOYQT_EXECUTABLE}" "${PROJECT_NAME}.app"
+      -verbose=3
+      -qmldir="${CMAKE_SOURCE_DIR}/qml"
+      -qmlimport="${CMAKE_SOURCE_DIR}/qml"
+      -dmg
+      #-always-overwrite
+      #-hardened-runtime
+      #-timestamp
+      #-codesign=
+      #-sign-for-notarization=
+  COMMENT "Running macdeployqt..."
 )
 
-string(APPEND CPACK_GENERATOR "DragNDrop;Bundle")
+# This installation statement ensures that whole deployment directory
+# (created by macdeployqt) is put into the package (.app.7z) by CPack
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app"
+  #CONFIGURATIONS Release
+  DESTINATION "."
+)
+
+#string(APPEND CPACK_GENERATOR ";DragNDrop;Bundle")
+list(APPEND PACKAGE_EXTENSIONS "7z" "dmg") # "app"
 
 ## macOS DMG (DragNDrop)
 # More info:

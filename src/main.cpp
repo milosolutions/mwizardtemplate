@@ -26,8 +26,10 @@ SOFTWARE.
   TEMPLATE main.cpp by Milo Solutions. Copyright 2020
 */
 
-#include <QCoreApplication>
+#include <QGuiApplication>
 #include <QLoggingCategory>
+#include <QIcon>
+#include <QQmlApplicationEngine>
 
 //#include "mlog/mlog.h"
 //#include "utils/tags.h"
@@ -42,13 +44,18 @@ Q_LOGGING_CATEGORY(coreMain, "core.main")
   class, if present.
   */
 int main(int argc, char *argv[]) {
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
     //MLog::instance();
     // Set up basic application data. Modify this to your needs
-    QCoreApplication app(argc, argv);
+    QGuiApplication app(argc, argv);
     app.setApplicationVersion(ApplicationVersion);
     app.setOrganizationName(CompanyName);
     app.setOrganizationDomain(CompanyDomain);
     app.setApplicationName("%{ProjectName}");
+
+    // For GUI applications:
+    app.setWindowIcon(QIcon("://icon.png"));
 
     //logger()->setLogLevel(MLog::DebugLog);
     //logger()->enableLogToFile(app.applicationName());
@@ -58,6 +65,15 @@ int main(int argc, char *argv[]) {
                      << "\\nVersion:" << app.applicationVersion()
                      << "\\nSHA:" << GitCommit
                      << "\\nBuild date:" << BuildDate;
+
+    QQmlApplicationEngine engine;
+        const QUrl url(QStringLiteral("qrc:/main.qml"));
+        QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+                         &app, [url](QObject *obj, const QUrl &objUrl) {
+            if (!obj && url == objUrl)
+                QCoreApplication::exit(-1);
+        }, Qt::QueuedConnection);
+        engine.load(url);
 
     return app.exec();
 }

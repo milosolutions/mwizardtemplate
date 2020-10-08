@@ -23,12 +23,13 @@ get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
 get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
 find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+add_custom_command(
+  TARGET ${PROJECT_NAME} POST_BUILD
   COMMAND "${CMAKE_COMMAND}" -E copy
-    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.exe"
+    "$<TARGET_FILE:${PROJECT_NAME}>"
     "${CMAKE_CURRENT_BINARY_DIR}/deployment/${PROJECT_NAME}.exe"
-  COMMAND "${CMAKE_COMMAND}" -E
-    env PATH="${_qt_bin_dir}" "${WINDEPLOYQT_EXECUTABLE}"
+  COMMAND "${CMAKE_COMMAND}" -E env PATH="${_qt_bin_dir}"
+    "${WINDEPLOYQT_EXECUTABLE}"
       --qmldir "${CMAKE_SOURCE_DIR}/qml"
       --qmlimport "${CMAKE_SOURCE_DIR}/qml"
       --verbose 1
@@ -47,7 +48,8 @@ install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/deployment/
 # * Chocolatey
 # * choco install cmake
 # * choco install nsis
-string(APPEND CPACK_GENERATOR "ZIP;NSIS") #;IFW
+string(APPEND CPACK_GENERATOR ";NSIS") #;IFW
+list(APPEND PACKAGE_EXTENSIONS "exe")
 
 ## NSIS
 # More info:
@@ -67,7 +69,6 @@ SET(CPACK_NSIS_DISPLAY_NAME "${CPACK_PACKAGE_NAME}")
 SET(CPACK_NSIS_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
 SET(CPACK_NSIS_URL_INFO_ABOUT "${COMPANY_DOMAIN}")
 SET(CPACK_NSIS_MUI_FINISHPAGE_RUN "${CPACK_PACKAGE_NAME}.exe")
-
 
 ## Qt Installer Framework (IFW)
 # More info:
