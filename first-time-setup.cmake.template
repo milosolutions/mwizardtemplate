@@ -17,6 +17,9 @@ if (NOT IS_DIRECTORY "${CMAKE_SOURCE_DIR}/.git")
 
   message("Adding Milo Code Database modules")
   execute_process(
+    @if "%{mdatabaseCheckBox}" == "mdatabaseChBChecked"
+    COMMAND "${GIT_EXECUTABLE}" submodule add -b master -- ${GIT_SERVER}/mscripts milo/mscripts
+    @endif
     @if "%{mbarcodescannerCheckBox}" == "mbarcodescannerChBChecked"
     COMMAND "${GIT_EXECUTABLE}" submodule add -b master -- ${GIT_SERVER}/mbarcodescanner milo/mbarcodescanner
     @endif
