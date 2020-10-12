@@ -4,57 +4,57 @@ if (NOT IS_DIRECTORY "${CMAKE_SOURCE_DIR}/.git")
   set(GIT_SERVER "%{GitServer}")
 
   if ("${GIT_SERVER}" STREQUAL "")
-    message(FATAL_ERROR "GIT_SERVER variable not set - cannot add git submodules!")
+    message("GIT_SERVER variable not set - cannot add git submodules!")
+  else()
+    find_package(Git REQUIRED)
+
+    message("Initializing git repository")
+    execute_process(
+      COMMAND "${GIT_EXECUTABLE}" init
+      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+
+    message("Adding Milo Code Database modules")
+    execute_process(
+      @if "%{mscriptsCheckBox}" == "mscriptsChBChecked"
+      COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mscripts milo/mscripts
+      @endif
+      @if "%{mbarcodescannerCheckBox}" == "mbarcodescannerChBChecked"
+      COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mbarcodescanner milo/mbarcodescanner
+      @endif
+      @if "%{mchartsCheckBox}" == "mchartsChBChecked"
+      COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mcharts milo/mcharts
+      @endif
+      @if "%{mconfigCheckBox}" == "mconfigChBChecked"
+      COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mconfig milo/mconfig
+      @endif
+      @if "%{mcryptoCheckBox}" == "mcryptoChBChecked"
+      COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mcrypto milo/mcrypto
+      @endif
+      @if "%{mlogCheckBox}" == "mlogChBChecked"
+      COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mlog milo/mlog
+      @endif
+      @if "%{mrestapiCheckBox}" == "mrestapiChBChecked"
+      COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mrestapi milo/mrestapi
+      @endif
+      @if "%{msentryCheckBox}" == "msentryChBChecked"
+      COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/msentry milo/msentry
+      @endif
+      @if "%{msshtunnelCheckBox}" == "msshtunnelChBChecked"
+      COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/msshtunnel milo/msshtunnel
+      @endif
+      @if "%{memailsystemCheckBox}" == "memailsystemChBChecked"
+      COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/memailsystem milo/memailsystem
+      @endif
+      @if "%{mcalendarCheckBox}" == "mcalendarChBChecked"
+      COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mcalendar milo/mcalendar
+      @endif
+      @if "%{mdatabaseCheckBox}" == "mdatabaseChBChecked"
+      COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mdatabase milo/mdatabase
+      @endif
+      WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+
+    message("Initialized GIT repository. Please inspect the results and commit them")
   endif()
-
-  find_package(Git REQUIRED)
-
-  message("Initializing git repository")
-  execute_process(
-    COMMAND "${GIT_EXECUTABLE}" init
-    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-  )
-
-  message("Adding Milo Code Database modules")
-  execute_process(
-    @if "%{mscriptsCheckBox}" == "mscriptsChBChecked"
-    COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mscripts milo/mscripts
-    @endif
-    @if "%{mbarcodescannerCheckBox}" == "mbarcodescannerChBChecked"
-    COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mbarcodescanner milo/mbarcodescanner
-    @endif
-    @if "%{mchartsCheckBox}" == "mchartsChBChecked"
-    COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mcharts milo/mcharts
-    @endif
-    @if "%{mconfigCheckBox}" == "mconfigChBChecked"
-    COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mconfig milo/mconfig
-    @endif
-    @if "%{mcryptoCheckBox}" == "mcryptoChBChecked"
-    COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mcrypto milo/mcrypto
-    @endif
-    @if "%{mlogCheckBox}" == "mlogChBChecked"
-    COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mlog milo/mlog
-    @endif
-    @if "%{mrestapiCheckBox}" == "mrestapiChBChecked"
-    COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mrestapi milo/mrestapi
-    @endif
-    @if "%{msentryCheckBox}" == "msentryChBChecked"
-    COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/msentry milo/msentry
-    @endif
-    @if "%{msshtunnelCheckBox}" == "msshtunnelChBChecked"
-    COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/msshtunnel milo/msshtunnel
-    @endif
-    @if "%{memailsystemCheckBox}" == "memailsystemChBChecked"
-    COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/memailsystem milo/memailsystem
-    @endif
-    @if "%{mcalendarCheckBox}" == "mcalendarChBChecked"
-    COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mcalendar milo/mcalendar
-    @endif
-    @if "%{mdatabaseCheckBox}" == "mdatabaseChBChecked"
-    COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mdatabase milo/mdatabase
-    @endif
-    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-  )
-
-  message("Initialized GIT repository. Please inspect the results and commit them")
 endif()
