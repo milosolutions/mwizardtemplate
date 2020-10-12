@@ -14,6 +14,7 @@ project(%{ProjectName}
   LANGUAGES CXX
 )
 
+include(first-time-setup.cmake)
 include(version.cmake)
 
 # QtCreator supports the following variables for Android, which are identical
