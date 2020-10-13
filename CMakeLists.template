@@ -14,7 +14,13 @@ project(%{ProjectName}
   LANGUAGES CXX
 )
 
+# On first run, if GIT repository is missing, the script below will initialize
+# a new GIT repository and add all MCDB submodules. Once it's ready, you can
+# safely remove this line!
 include(first-time-setup.cmake)
+
+# Central place for versioning information for all platforms, installers
+# and documentation
 include(version.cmake)
 
 # QtCreator supports the following variables for Android, which are identical
@@ -207,10 +213,12 @@ target_link_libraries(${PROJECT_NAME}
   Qt${QT_VERSION_MAJOR}::Quick
 )
 
+## Deployment configuration
+#
 # More info:
 # https://cmake.org/cmake/help/latest/module/CPack.html#variable:CPACK_PACKAGE_DESCRIPTION
 SET(CPACK_GENERATOR "7Z")
-SET(PACKAGE_EXTENSIONS "") # "7z" "sha512"
+SET(PACKAGE_EXTENSIONS "") # "7z" "sha512", etc.
 set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 set(CPACK_PACKAGE_VENDOR "${COMPANY_NAME}")
 set(CPACK_PACKAGE_CONTACT "${COMPANY_NAME}")
@@ -261,7 +269,13 @@ include(CPack)
 # 'make package').
 #
 # For example on Linux ${PACKAGE_EXTENSIONS} are set to "deb rpm" and as
-# a result, targets "upload_deb" and "upload_rpm" will be available.
+# a result, targets "upload_deb" and "upload_rpm" will be available, on Windows
+# there is "upload_exe" and on macOS there is "upload_dmg".
+#
+# Upload script requires 3 environment variables to be set:
+# - SEAFILE_TOKEN - Seafile API access token
+# - SEAFILE_SERVER - Seafile server URL
+# - SEAFILE_REPOSITORY_ID - ID of the repository (library) to upload to
 #
 if(DEFINED ENV{SEAFILE_TOKEN})
   # Upload each of generated packages
