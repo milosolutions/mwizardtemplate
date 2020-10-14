@@ -5,16 +5,17 @@
 
 DOXYFILE_ENCODING = UTF-8
 
-PROJECT_NAME = %{ProjectName}
-PROJECT_NUMBER = $$VERSION
+PROJECT_NAME = ${PROJECT_NAME}
+PROJECT_NUMBER = ${PROJECT_VERSION}
 PROJECT_BRIEF = "TEMPLATE doxygen file - use it in your project"
-PROJECT_LOGO = %{ProjectName}.png
+PROJECT_LOGO = doctest.png
 
 OUTPUT_DIRECTORY = doc/
 
-INPUT = license-Qt.txt AUTHORS.md README.md Release.md \\
-    platforms/ \\
-    src/
+INPUT = LICENSE.md license-Qt.txt LICENSE-MiloCodeDB.txt \
+  AUTHORS.md README.md Release.md \
+  platforms/ \
+  src/
 
 #EXCLUDE_PATTERNS = */something/*
 USE_MDFILE_AS_MAINPAGE = README.md
@@ -41,7 +42,7 @@ SOURCE_BROWSER = YES
 
 DISTRIBUTE_GROUP_DOC = YES
 
-GENERATE_TAGFILE = %{ProjectName}.doxytag
+GENERATE_TAGFILE = doctest.doxytag
 GENERATE_HTML = YES
 GENERATE_LATEX = NO
 GENERATE_RTF = NO

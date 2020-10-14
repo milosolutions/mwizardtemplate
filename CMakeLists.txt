@@ -125,7 +125,7 @@ set(OTHER_FILES
   AUTHORS.md
   LICENSE-MiloCodeDB.txt
   license-Qt.txt
-  %{ProjectName}.doxyfile.in
+  Doxyfile.in
   .clang-format
   .gitignore
   .gitlab-ci.yml
@@ -256,6 +256,24 @@ else()
       include(platforms/linux/linux.cmake)
     endif()
   endif()
+endif()
+
+## Documentation
+configure_file(Doxyfile.in Doxyfile NEWLINE_STYLE UNIX)
+find_package(Doxygen REQUIRED dot OPTIONAL_COMPONENTS mscgen dia)
+
+if (DOXYGEN_FOUND)
+  add_custom_target(
+    doc
+    COMMAND Doxygen::doxygen ${CMAKE_BINARY_DIR}/Doxyfile
+    COMMAND ${CMAKE_COMMAND} -E tar "cv" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}-${PROJECT_VERSION}-doc.7z"
+      --format=7zip "${CMAKE_CURRENT_SOURCE_DIR}/doc/html"
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+  )
+
+  list(APPEND PACKAGE_EXTENSIONS "7z")
+else()
+  message(WARNING "Doxygen has not been found. 'doc' target is not available!")
 endif()
 
 message("CPack generators are: ${CPACK_GENERATOR}")

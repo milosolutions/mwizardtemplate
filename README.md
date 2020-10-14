@@ -26,7 +26,7 @@ a .pri and CMakeLists.txt files - depending on which build system you are using
 * tests - put all unit tests here. They will be picked up by Qt Creator
 automatically when you open your main .pro file
 (located in `_project name_/_project name_.pro`)
-* `_project name_.doxyfile.in` - doxygen configuration template file. Use it to
+* `Doxyfile.in` - doxygen configuration template file. Use it to
 set up and build the documentation for your project. Milo submodules each have a
 doxyfile as well, so you can easily combine them (via doxytags).
 The .in file is transformed into a real doxygen configuration file when you run

@@ -1,6 +1,7 @@
 stages:
 - test
 - build
+- doc
 
 #Global variables
 variables:
@@ -36,6 +37,15 @@ unit_tests:
   script:
     - cmake -DCMAKE_BUILD_TYPE:String=Release -DCMAKE_PREFIX_PATH:STRING="${QT_PATH_LINUX}" .
     - cmake -E env CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --parallel $(nproc) --config Release --target all test
+
+documentation:
+  <<: *common
+  tags:
+    - LinuxDesktop
+  stage: doc
+  script:
+    - cmake -DCMAKE_BUILD_TYPE:String=Release -DCMAKE_PREFIX_PATH:STRING="${QT_PATH_LINUX}" .
+    - cmake --build . --parallel 1 --config Release --target doc upload_7z
 
 # Android
 android_build:

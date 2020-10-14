@@ -29,8 +29,8 @@ ltcg {
 
 docs {
     message("Updating doxygen file. No compilation will be performed!")
-    doxy.input = $$PWD/%{ProjectName}.doxyfile.in
-    doxy.output = $$PWD/%{ProjectName}.doxyfile
+    doxy.input = $$PWD/Doxyfile.in
+    doxy.output = $$PWD/Doxyfile
     QMAKE_SUBSTITUTES += doxy
 }
 
@@ -46,7 +46,7 @@ RESOURCES += \\
     resources/resources.qrc
 
 OTHER_FILES += \\
-    %{ProjectName}.doxyfile \\
+    Doxyfile.in \\
     README.md \\
     Release.md \\
     .gitignore \\
