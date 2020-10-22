@@ -112,9 +112,10 @@ add_subdirectory(milo/mdatabase)
 set(SOURCES
   src/utils/tags.h
   src/utils/helpers.h
+  src/utils/qmlhelpers.cpp src/utils/qmlhelpers.h
 )
 
-set(RESOURCES
+list(APPEND RESOURCES
   qml/qml.qrc
   resources/resources.qrc
 )
@@ -159,7 +160,6 @@ else()
   if (WIN32)
     add_executable(${PROJECT_NAME} WIN32 src/main.cpp ${RESOURCES} ${OTHER_FILES})
   elseif(APPLE)
-
     add_executable(${PROJECT_NAME} MACOSX_BUNDLE src/main.cpp ${RESOURCES} ${OTHER_FILES})
   else()
     add_executable(${PROJECT_NAME} src/main.cpp ${RESOURCES} ${OTHER_FILES})
@@ -170,15 +170,14 @@ target_compile_definitions(${PROJECT_NAME}
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>
 )
 
+# MCharts are intentionally left out because they don't provide a library
+# (it's only a QRC resource)
 target_link_libraries(project-lib
 @if "%{mlogCheckBox}" == "mlogChBChecked"
   mlog
 @endif
 @if "%{mbarcodescannerCheckBox}" == "mbarcodescannerChBChecked"
   mbarcodescanner
-@endif
-@if "%{mchartsCheckBox}" == "mchartsChBChecked"
-  mcharts
 @endif
 @if "%{mconfigCheckBox}" == "mconfigChBChecked"
   mconfig

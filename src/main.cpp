@@ -33,7 +33,8 @@ SOFTWARE.
 
 //#include "mlog/mlog.h"
 //#include "utils/tags.h"
-//#include "utils/helpers.h"
+#include "utils/helpers.h"
+#include "utils/qmlhelpers.h"
 
 // Prepare logging categories. Modify these to your needs
 //Q_DECLARE_LOGGING_CATEGORY(core) // already declared in MLog header
@@ -67,13 +68,17 @@ int main(int argc, char *argv[]) {
                      << "\\nBuild date:" << BuildDate;
 
     QQmlApplicationEngine engine;
-        const QUrl url(QStringLiteral("qrc:/main.qml"));
-        QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                         &app, [url](QObject *obj, const QUrl &objUrl) {
-            if (!obj && url == objUrl)
-                QCoreApplication::exit(-1);
-        }, Qt::QueuedConnection);
-        engine.load(url);
+
+    auto qmlHelpers = new QmlHelpers(&engine);
+    engine.rootContext()->setContextProperty("qmlHelpers", qmlHelpers);
+
+    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    CHECK(QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+                           &app, [url](QObject *obj, const QUrl &objUrl) {
+              if (!obj && url == objUrl)
+              QCoreApplication::exit(-1);
+          }, Qt::QueuedConnection));
+    engine.load(url);
 
     return app.exec();
 }
