@@ -52,6 +52,7 @@ if (NOT IS_DIRECTORY "${CMAKE_SOURCE_DIR}/.git")
       @if "%{mdatabaseCheckBox}" == "mdatabaseChBChecked"
       COMMAND "${GIT_EXECUTABLE}" submodule add -b master -f -- ${GIT_SERVER}/mdatabase milo/mdatabase
       @endif
+      COMMAND "${GIT_EXECUTABLE}" submodule update --init --recursive
       WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     )
 

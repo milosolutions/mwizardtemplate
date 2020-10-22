@@ -204,6 +204,7 @@ target_link_libraries(project-lib
   mdatabase
 @endif
   Qt${QT_VERSION_MAJOR}::Core
+  Qt${QT_VERSION_MAJOR}::Gui
 )
 
 target_link_libraries(${PROJECT_NAME}

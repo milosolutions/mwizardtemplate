@@ -1,5 +1,5 @@
 /*******************************************************************************
-Copyright (C) 2017 Milo Solutions
+Copyright (C) 2020 Milo Solutions
 Contact: https://www.milosolutions.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,6 +30,7 @@ SOFTWARE.
 #include <QLoggingCategory>
 #include <QIcon>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 //#include "mlog/mlog.h"
 //#include "utils/tags.h"
